@@ -6,10 +6,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Home extends JFrame {
-    public Home() {
+public class DailyTracker extends JFrame {
+    public DailyTracker() {
         // Set the title of the window
-        setTitle("FUD - Home");
+        setTitle("FUD - Daily Tracker");
 
         // Set the window to full screen
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -35,16 +35,16 @@ public class Home extends JFrame {
         buttonGroup.add(button3);
         buttonGroup.add(button4);
 
-        // Set the Home button as selected
-        button1.setSelected(true);
+        // Set the Daily Tracker button as selected
+        button4.setSelected(true);
 
         // Create a page navigation controller
         PageNavigationController pageNavigationController = new PageNavigationController(this);
 
         // Add action listeners to the buttons
+        button1.addActionListener(e -> pageNavigationController.navigateToHome());
         button2.addActionListener(e -> pageNavigationController.navigateToProfile());
         button3.addActionListener(e -> pageNavigationController.navigateToDailyPlan());
-        button4.addActionListener(e -> pageNavigationController.navigateToDailyTracker());
 
         // Add the buttons to the panel
         panel.add(button1);
