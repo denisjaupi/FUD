@@ -3,13 +3,9 @@ package View;
 import Controller.PageNavigationController;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Profile extends JFrame {
     public Profile() {
-        // Set the title of the window
-        setTitle("FUD - Profile");
 
         // Set the window to full screen
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -17,8 +13,22 @@ public class Profile extends JFrame {
         // Set the default close operation
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Create a panel with a grid layout
-        JPanel panel = new JPanel(new GridLayout(4, 1));
+        // Set the minimum size of the window
+        setMinimumSize(new Dimension(800, 600));
+
+        // Create a main panel with a border layout
+        JPanel mainPanel = new JPanel(new BorderLayout());
+
+        // Create a label with the text "Profile"
+        JLabel label = new JLabel("Profile", SwingConstants.CENTER);
+        label.setFont(new Font("Arial", Font.BOLD, 36));
+
+        // Create a panel with a flow layout for the label
+        JPanel labelPanel = new JPanel(new FlowLayout());
+        labelPanel.add(label);
+
+        // Create a panel with a grid layout for the buttons
+        JPanel buttonPanel = new JPanel(new GridLayout(4, 1));
 
         // Create the buttons
         JToggleButton button1 = new JToggleButton("Home");
@@ -46,14 +56,18 @@ public class Profile extends JFrame {
         button3.addActionListener(e -> pageNavigationController.navigateToDailyPlan());
         button4.addActionListener(e -> pageNavigationController.navigateToDailyTracker());
 
-        // Add the buttons to the panel
-        panel.add(button1);
-        panel.add(button2);
-        panel.add(button3);
-        panel.add(button4);
+        // Add the buttons to the button panel
+        buttonPanel.add(button1);
+        buttonPanel.add(button2);
+        buttonPanel.add(button3);
+        buttonPanel.add(button4);
 
-        // Add the panel to the frame
-        add(panel, BorderLayout.WEST);
+        // Add the label panel and the button panel to the main panel
+        mainPanel.add(labelPanel, BorderLayout.CENTER);
+        mainPanel.add(buttonPanel, BorderLayout.WEST);
+
+        // Add the main panel to the frame
+        add(mainPanel);
 
         // Make the window visible
         setVisible(true);
