@@ -10,8 +10,8 @@ import java.awt.event.ItemListener;
 import java.util.stream.IntStream;
 
 import Controller.PageNavigationController;
-import Model.CalculatedProfileData;
 import Model.ProfileData;
+import Model.CalculatedProfileData;
 
 public class Profile extends JFrame {
 
@@ -136,16 +136,17 @@ public class Profile extends JFrame {
             String goal = goalComboBox.getSelectedItem().toString();
 
             // Crea un'istanza di ProfileData
-            ProfileData profileData = new ProfileData(height, weight, age, gender, activityLevel);
+            ProfileData profileData = new ProfileData(height, weight, age, gender, activityLevel, goal);
 
-            // Ottieni i dati calcolati da profileData
+            // Ottieni i valori calcolati
             CalculatedProfileData calculatedProfileData = profileData.getCalculatedProfileData();
 
-            // Mostra i risultati nei campi di testo di output
+            // Assegna i valori calcolati ai campi di testo corrispondenti
             bmrField.setText(calculatedProfileData.getBmr());
             bmiField.setText(calculatedProfileData.getBmi());
             waterRequirementField.setText(calculatedProfileData.getWaterRequirement());
             caloricIntakeField.setText(calculatedProfileData.getCaloricIntake());
+
         }
     }
 

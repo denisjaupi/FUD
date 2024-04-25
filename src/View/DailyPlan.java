@@ -1,6 +1,7 @@
 package View;
 
 import Controller.PageNavigationController;
+
 import javax.swing.*;
 import java.awt.*;
 

@@ -6,14 +6,16 @@ public class ProfileData {
     private int age;
     private String gender;
     private String activityLevel;
+    private String goal;
     private CalculatedProfileData calculatedProfileData;
 
-    public ProfileData(int height, int weight, int age, String gender, String activityLevel) {
+    public ProfileData(int height, int weight, int age, String gender, String activityLevel, String goal) {
         this.height = height;
         this.weight = weight;
         this.age = age;
         this.gender = gender;
         this.activityLevel = activityLevel;
+        this.goal = goal;
         calculateAndStoreProfileData();
     }
 
@@ -36,6 +38,10 @@ public class ProfileData {
 
     public String getActivityLevel() {
         return activityLevel;
+    }
+
+    public String getGoal() {
+        return goal;
     }
 
     public CalculatedProfileData getCalculatedProfileData() {

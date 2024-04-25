@@ -1,6 +1,7 @@
 package View;
 
 import Controller.PageNavigationController;
+import Model.ProfileData;
 import javax.swing.*;
 import java.awt.*;
 
@@ -49,7 +50,7 @@ public class Home extends JFrame {
         // Set the Home button as selected
         button1.setSelected(true);
 
-        // Create a page navigation controller
+        // Create a new PageNavigationController
         PageNavigationController pageNavigationController = new PageNavigationController(this);
 
         // Add action listeners to the buttons

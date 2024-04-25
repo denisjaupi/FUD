@@ -11,12 +11,13 @@ import java.awt.*;
 public class PageNavigationController {
     private JFrame currentFrame;
     private Dimension frameSize;
-    private Point frameLocation;
+    private Point frameLocation;;
 
     public PageNavigationController(JFrame currentFrame) {
         this.currentFrame = currentFrame;
         this.frameSize = currentFrame.getSize(); // get the size of the current frame
         this.frameLocation = currentFrame.getLocation(); // get the location of the current frame
+
     }
 
     public void navigateToProfile() {
