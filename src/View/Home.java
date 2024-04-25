@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Home extends JFrame {
+
     public Home() {
 
         // Set the window to full screen
