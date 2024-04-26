@@ -27,7 +27,7 @@ public class Exercise {
     }
 
     public double countBurnCalories(int weight){  // da moltiplicare con il peso
-        calories= met* time* intensity*weight;
+        calories= met* time* weight;
         return calories;
     }
     public int getId() {
