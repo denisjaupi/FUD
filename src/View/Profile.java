@@ -10,8 +10,8 @@ import java.awt.event.ItemListener;
 import java.util.stream.IntStream;
 
 import Controller.PageNavigationController;
-import Model.ProfileData;
-import Model.CalculatedProfileData;
+import Model.Util.CalculatedProfileData;
+import Model.Entities.PersonalData;
 
 public class Profile extends JFrame {
 
@@ -175,10 +175,10 @@ public class Profile extends JFrame {
             String goal = goalComboBox.getSelectedItem().toString();
 
             // Crea un'istanza di ProfileData
-            ProfileData profileData = new ProfileData(height, weight, age, gender, activityLevel, goal);
+            PersonalData personalData = new PersonalData(height, weight, age, gender, activityLevel, goal);
 
             // Ottieni i valori calcolati
-            CalculatedProfileData calculatedProfileData = profileData.getCalculatedProfileData();
+            CalculatedProfileData calculatedProfileData = personalData.getCalculatedProfileData();
 
             // Assegna i valori calcolati ai campi di testo corrispondenti
             bmrField.setText(calculatedProfileData.getBmr());

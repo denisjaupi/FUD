@@ -1,7 +1,7 @@
 package View;
 
 import Controller.PageNavigationController;
-import Model.ProfileData;
+
 import javax.swing.*;
 import java.awt.*;
 

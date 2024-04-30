@@ -20,43 +20,60 @@ public class PersonalData{
         this.goal = goal;
         calculateAndProfileData();
     }
+
     public double getHeight(){
         return height;
     }
+
     public void setHeight(double height){
         this.height = height;
     }
+
     public double getWeight(){
         return weight;
     }
+
     public void setWeight(double weight){
         this.weight = weight;
     }
+
     public int getAge(){
         return age;
     }
+
     public void setAge(int age){
         this.age = age;
     }
+
     public String getGender(){
         return gender;
     }
+
     public void setGender(String gender){
         this.gender = gender;
     }
+
     public String getActivity(){
         return activity;
     }
+
     public void setActivity(String activity){
         this.activity = activity;
     }
+
     public String getGoal(){
         return goal;
     }
+
     public void setGoal(String goal){
         this.goal = goal;
     }
-    private  void calculateAndProfileData(){
+
+    public CalculatedProfileData getCalculatedProfileData(){
+        return calculateProfileData;
+    }
+
+    private void calculateAndProfileData(){
         String bmr=String.format("%.3f", calculateBMR());
         String bmi=String.format("%.3f", calculateBMI());
         String waterRequirement=String.format("%.3f", calculateWaterRequirement());
