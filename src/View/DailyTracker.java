@@ -1,13 +1,12 @@
 package View;
 
 import Controller.PageNavigationController;
-import Model.ProfileData;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class Home extends JFrame {
-
-    public Home() {
+public class DailyTracker extends JFrame {
+    public DailyTracker() {
 
         // Set the window to full screen
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -21,8 +20,8 @@ public class Home extends JFrame {
         // Create a main panel with a border layout
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // Create a label with the text "Home"
-        JLabel label = new JLabel("Home", SwingConstants.CENTER);
+        // Create a label with the text "Daily Tracker"
+        JLabel label = new JLabel("Daily Tracker", SwingConstants.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, 36));
 
         // Create a panel with a flow layout for the label
@@ -47,16 +46,16 @@ public class Home extends JFrame {
         buttonGroup.add(button3);
         buttonGroup.add(button4);
 
-        // Set the Home button as selected
-        button1.setSelected(true);
+        // Set the Daily Tracker button as selected
+        button4.setSelected(true);
 
-        // Create a new PageNavigationController
+        // Create a page navigation controller
         PageNavigationController pageNavigationController = new PageNavigationController(this);
 
         // Add action listeners to the buttons
+        button1.addActionListener(e -> pageNavigationController.navigateToHome());
         button2.addActionListener(e -> pageNavigationController.navigateToProfile());
         button3.addActionListener(e -> pageNavigationController.navigateToDailyPlan());
-        button4.addActionListener(e -> pageNavigationController.navigateToDailyTracker());
 
         // Add the buttons to the button panel
         buttonPanel.add(button1);
