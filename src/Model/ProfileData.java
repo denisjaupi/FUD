@@ -79,19 +79,45 @@ public class ProfileData {
     // Calcolo dell'intake calorico giornaliero basato sul livello di attività
     private double calculateCaloricIntake() {
         double bmr = calculateBMR();
+        double caloricIntake;
+
         switch (activityLevel) {
             case "Sedentary":
-                return bmr * 1.2;
+                caloricIntake = bmr * 1.2;
+                break;
             case "Lightly Active":
-                return bmr * 1.375;
+                caloricIntake = bmr * 1.375;
+                break;
             case "Moderately Active":
-                return bmr * 1.55;
+                caloricIntake = bmr * 1.55;
+                break;
             case "Very Active":
-                return bmr * 1.725;
+                caloricIntake = bmr * 1.725;
+                break;
             case "Super Active":
-                return bmr * 1.9;
+                caloricIntake = bmr * 1.9;
+                break;
             default:
-                return bmr * 1.2; // caso di default
+                caloricIntake = bmr * 1.2;
         }
+
+        switch (goal) {
+            case "Weight Loss":
+                caloricIntake -= 500;
+                break;
+            case "Slight Weight Loss":
+                caloricIntake -= 200;
+                break;
+            case "Maintain Weight":
+                break;
+            case "Slight Weight Gain":
+                caloricIntake += 200;
+                break;
+            case "Weight Gain":
+                caloricIntake += 500;
+                break;
+        }
+
+        return caloricIntake;
     }
 }

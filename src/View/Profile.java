@@ -27,56 +27,95 @@ public class Profile extends JFrame {
     private JTextField waterRequirementField;
     private JTextField caloricIntakeField;
 
-    private ProfileData profileData;
-
 
     public Profile() {
+        setupWindow();
+        JPanel mainPanel = createMainPanel();
+        add(mainPanel);
+        setVisible(true);
+        addDocumentListeners();
+    }
 
-        // Window settings
+    private void setupWindow() {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(800, 600));
+    }
 
-        // Main panel with a box layout
+    private JPanel createMainPanel() {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
 
-        // Button panel on the west
         JPanel buttonPanel = createButtonPanel();
         mainPanel.add(buttonPanel);
 
-        // Panel for the rest of the content
+        JPanel contentPanel = createContentPanel();
+        mainPanel.add(contentPanel);
+
+        return mainPanel;
+    }
+
+    private JPanel createButtonPanel() {
+        JPanel buttonPanel = new JPanel(new GridLayout(4, 1));
+        ButtonGroup buttonGroup = new ButtonGroup();
+
+        JToggleButton button1 = createButton("Home", buttonGroup);
+        JToggleButton button2 = createButton("Profile", buttonGroup);
+        JToggleButton button3 = createButton("Daily Plan", buttonGroup);
+        JToggleButton button4 = createButton("Daily Tracker", buttonGroup);
+
+        button2.setSelected(true);
+
+        buttonPanel.add(button1);
+        buttonPanel.add(button2);
+        buttonPanel.add(button3);
+        buttonPanel.add(button4);
+
+        return buttonPanel;
+    }
+
+    private JToggleButton createButton(String title, ButtonGroup buttonGroup) {
+        JToggleButton button = new JToggleButton(title);
+        buttonGroup.add(button);
+        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        button.addActionListener(e -> {
+            switch (title) {
+                case "Home":
+                    pageNavigationController.navigateToHome();
+                    break;
+                case "Profile":
+                    pageNavigationController.navigateToProfile();
+                    break;
+                case "Daily Plan":
+                    pageNavigationController.navigateToDailyPlan();
+                    break;
+                case "Daily Tracker":
+                    pageNavigationController.navigateToDailyTracker();
+                    break;
+            }
+        });
+        return button;
+    }
+
+    private JPanel createContentPanel() {
         JPanel contentPanel = new JPanel(new BorderLayout());
 
-        // Label "Profile" at the top
         JLabel label = new JLabel("Profile", SwingConstants.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, 36));
         JPanel labelPanel = new JPanel(new FlowLayout());
         labelPanel.add(label);
         contentPanel.add(labelPanel, BorderLayout.NORTH);
 
-        // Central panel with BoxLayout for input and selection panels
         JPanel centralPanel = new JPanel();
-        centralPanel.setLayout(new BoxLayout(centralPanel, BoxLayout.Y_AXIS)); // Change GridLayout to BoxLayout
+        centralPanel.setLayout(new BoxLayout(centralPanel, BoxLayout.Y_AXIS));
 
-        // Add input and selection panels to centralPanel
         createInputPanel(centralPanel);
         createSelectionPanel(centralPanel);
         createOutputPanel(centralPanel);
 
-        // Add the central panel to the content panel
         contentPanel.add(centralPanel, BorderLayout.CENTER);
 
-        // Add the content panel to the main panel
-        mainPanel.add(contentPanel);
-
-        // Add the main panel to the frame and make it visible
-        add(mainPanel);
-        setVisible(true);
-
-        // Call the method to add DocumentListeners
-        addDocumentListeners();
-
+        return contentPanel;
     }
 
     private void addDocumentListeners() {
@@ -288,45 +327,4 @@ public class Profile extends JFrame {
         contentPanel.add(selectionPanel, BorderLayout.CENTER);
     }
 
-    private JPanel createButtonPanel() {
-        JPanel buttonPanel = new JPanel(new GridLayout(4, 1));
-        ButtonGroup buttonGroup = new ButtonGroup();
-
-        JToggleButton button1 = createButton("Home", buttonGroup);
-        JToggleButton button2 = createButton("Profile", buttonGroup);
-        JToggleButton button3 = createButton("Daily Plan", buttonGroup);
-        JToggleButton button4 = createButton("Daily Tracker", buttonGroup);
-
-        button2.setSelected(true);
-
-        buttonPanel.add(button1);
-        buttonPanel.add(button2);
-        buttonPanel.add(button3);
-        buttonPanel.add(button4);
-
-        return buttonPanel;
-    }
-
-    private JToggleButton createButton(String title, ButtonGroup buttonGroup) {
-        JToggleButton button = new JToggleButton(title);
-        buttonGroup.add(button);
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
-        button.addActionListener(e -> {
-            switch (title) {
-                case "Home":
-                    pageNavigationController.navigateToHome();
-                    break;
-                case "Profile":
-                    pageNavigationController.navigateToProfile();
-                    break;
-                case "Daily Plan":
-                    pageNavigationController.navigateToDailyPlan();
-                    break;
-                case "Daily Tracker":
-                    pageNavigationController.navigateToDailyTracker();
-                    break;
-            }
-        });
-        return button;
-    }
 }
