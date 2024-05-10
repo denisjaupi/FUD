@@ -15,6 +15,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.plot.RingPlot;
 import org.jfree.data.general.DefaultPieDataset;
 
 
@@ -63,11 +64,12 @@ public class DailyPlan extends JFrame {
         centralPanel.add(createOutputPanel(), gbc);
 
         gbc.gridy = 2;
-        gbc.weighty = 1;
+        gbc.weighty = 0.65;
         gbc.fill = GridBagConstraints.BOTH;
         centralPanel.add(createMacrosDistributionPanel(), gbc);
 
         gbc.gridy = 3;
+        gbc.weighty = 0.35;
         centralPanel.add(createMealDistributionPanel(), gbc);
 
         return centralPanel;
@@ -93,46 +95,44 @@ public class DailyPlan extends JFrame {
 
         //////////////////////////////////////////////////////////////////////////
 
-        JPanel macrosLabelsPanel = new JPanel(new GridLayout(1, 3));
-        macrosLabelsPanel.setPreferredSize(new Dimension(macrosDistributionPanel.getPreferredSize().width, 40));
+        // Crea il pannello principale con un BoxLayout
+        JPanel macrosLabelsPanel = new JPanel();
+        macrosLabelsPanel.setLayout(new BoxLayout(macrosLabelsPanel, BoxLayout.X_AXIS));
 
         // Crea i campi di testo
-        JTextField carbsOutput = new JTextField();
-        JTextField proteinsOutput = new JTextField();
-        JTextField fatsOutput = new JTextField();
+        JTextField carbsOutput = new JTextField(10);
+        JTextField proteinsOutput = new JTextField(10);
+        JTextField fatsOutput = new JTextField(10);
 
         // Imposta i campi di testo come non modificabili
         carbsOutput.setEditable(false);
         proteinsOutput.setEditable(false);
         fatsOutput.setEditable(false);
 
-        // Crea i pannelli per le etichette e i campi di testo
-        JPanel carbsPanel = new JPanel(new BorderLayout());
-        JPanel proteinsPanel = new JPanel(new BorderLayout());
-        JPanel fatsPanel = new JPanel(new BorderLayout());
-
-        // Aggiungi un bordo vuoto a ciascun pannello per creare più spazio tra di loro
-        carbsPanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 0, 120));
-        proteinsPanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 0, 100));
-        fatsPanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 0, 120));
-
+        // Crea i pannelli per le etichette e i campi di testo con un FlowLayout con gap ridotto
+        JPanel carbsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
+        JPanel proteinsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
+        JPanel fatsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
 
         // Aggiungi le etichette e i campi di testo ai pannelli
-        carbsPanel.add(new JLabel("Carbs:", SwingConstants.CENTER), BorderLayout.WEST);
-        carbsPanel.add(carbsOutput, BorderLayout.CENTER);
-        carbsPanel.add(new JLabel("g", SwingConstants.CENTER), BorderLayout.EAST);
-        proteinsPanel.add(new JLabel("Proteins:", SwingConstants.CENTER), BorderLayout.WEST);
-        proteinsPanel.add(proteinsOutput, BorderLayout.CENTER);
-        proteinsPanel.add(new JLabel("g", SwingConstants.CENTER), BorderLayout.EAST);
-        fatsPanel.add(new JLabel("Fats:", SwingConstants.CENTER), BorderLayout.WEST);
-        fatsPanel.add(fatsOutput, BorderLayout.CENTER);
-        fatsPanel.add(new JLabel("g", SwingConstants.CENTER), BorderLayout.EAST);
+        carbsPanel.add(new JLabel("Carbs:"));
+        carbsPanel.add(carbsOutput);
+        carbsPanel.add(new JLabel("g"));
+        proteinsPanel.add(new JLabel("Proteins:"));
+        proteinsPanel.add(proteinsOutput);
+        proteinsPanel.add(new JLabel("g"));
+        fatsPanel.add(new JLabel("Fats:"));
+        fatsPanel.add(fatsOutput);
+        fatsPanel.add(new JLabel("g"));
 
-
-        // Aggiungi i pannelli al pannello delle etichette
+        // Aggiungi del filler e i pannelli al pannello principale
+        macrosLabelsPanel.add(Box.createHorizontalGlue()); // Aggiungi del filler
         macrosLabelsPanel.add(carbsPanel);
+        macrosLabelsPanel.add(Box.createHorizontalStrut(15)); // Crea uno spazio di 15 pixel
         macrosLabelsPanel.add(proteinsPanel);
+        macrosLabelsPanel.add(Box.createHorizontalStrut(15)); // Crea uno spazio di 15 pixel
         macrosLabelsPanel.add(fatsPanel);
+        macrosLabelsPanel.add(Box.createHorizontalGlue());
 
         gbc.gridy = 1;
         macrosDistributionPanel.add(macrosLabelsPanel, gbc);
@@ -151,11 +151,11 @@ public class DailyPlan extends JFrame {
         dataset.setValue("Fats", 20); // sostituisci con i valori reali
 
         // Crea il grafico a torta
-        JFreeChart pieChart = ChartFactory.createPieChart(null, dataset, false, true, false);
+        JFreeChart pieChart = ChartFactory.createRingChart(null, dataset, false, true, false);
 
         // Imposta lo sfondo del grafico come trasparente
         pieChart.setBackgroundPaint(null);
-        PiePlot plot = (PiePlot) pieChart.getPlot();
+        RingPlot plot = (RingPlot) pieChart.getPlot();
         // Imposta il generatore di etichette per mostrare le percentuali
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} = {2}"));
         plot.setLabelBackgroundPaint(Color.WHITE);
@@ -169,9 +169,12 @@ public class DailyPlan extends JFrame {
         plot.setSectionPaint("Proteins", mediumBlue);
         plot.setSectionPaint("Fats", darkBlue);
 
+        plot.setSectionDepth(0.3);
+
         // Crea un pannello per il grafico e aggiungilo al pannello principale
         ChartPanel chartPanel = new ChartPanel(pieChart);
         chartPanel.setOpaque(false);
+        chartPanel.setMaximumSize(new Dimension(300, 300)); // Imposta la dimensione massima del grafico
         singlePanel.add(chartPanel);
 
         macrosDistributionPanel.add(singlePanel, gbc);
@@ -179,7 +182,7 @@ public class DailyPlan extends JFrame {
         //////////////////////////////////////////////////////////////////////////
 
         JButton macrosDistributionButton = new JButton("Edit Macros Distribution");
-        macrosDistributionButton.setPreferredSize(new Dimension(macrosDistributionButton.getPreferredSize().width, 100));
+        macrosDistributionButton.setPreferredSize(new Dimension(macrosDistributionButton.getPreferredSize().width, 40));
         gbc.gridy = 3;
         gbc.weighty = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -199,42 +202,69 @@ public class DailyPlan extends JFrame {
         label.setFont(new Font("Arial", Font.BOLD, 24));
         mealDistributionPanel.add(label);
 
+        //////////////////////////////////////////////////////////////////////////
 
-        JPanel macrosLabelsPanel = new JPanel(new GridLayout(1, 3));
-        macrosLabelsPanel.setPreferredSize(new Dimension(mealDistributionPanel.getPreferredSize().width, 40));
-        JLabel carbsLabel = new JLabel("Carbs", SwingConstants.CENTER);
-        JLabel proteinsLabel = new JLabel("Proteins", SwingConstants.CENTER);
-        JLabel fatsLabel = new JLabel("Fats", SwingConstants.CENTER);
-        macrosLabelsPanel.add(carbsLabel);
-        macrosLabelsPanel.add(proteinsLabel);
-        macrosLabelsPanel.add(fatsLabel);
-        macrosLabelsPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
-        mealDistributionPanel.add(macrosLabelsPanel);
+        // Crea il pannello delle etichette con un GridBagLayout
+        JPanel mealLabelsPanel = new JPanel(new GridBagLayout());
+        //mealLabelsPanel.setPreferredSize(new Dimension(mealDistributionPanel.getPreferredSize().width, 40));
+        mealLabelsPanel.setLayout(new BoxLayout(mealLabelsPanel, BoxLayout.X_AXIS));
+
+        // Crea il GridBagConstraints per gestire il layout
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1;
+
+        // Crea i campi di testo
+        JTextField carbsOutput = new JTextField(10);
+        JTextField proteinsOutput = new JTextField(10);
+        JTextField fatsOutput = new JTextField(10);
+
+        // Imposta i campi di testo come non modificabili
+        carbsOutput.setEditable(false);
+        proteinsOutput.setEditable(false);
+        fatsOutput.setEditable(false);
+
+        // Crea i pannelli per le etichette e i campi di testo con un FlowLayout con gap ridotto
+        JPanel carbsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
+        JPanel proteinsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
+        JPanel fatsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
+
+
+        // Aggiungi le etichette e i campi di testo ai pannelli
+        carbsPanel.add(new JLabel("Carbs:"));
+        carbsPanel.add(carbsOutput);
+        carbsPanel.add(new JLabel("g"));
+        proteinsPanel.add(new JLabel("Proteins:"));
+        proteinsPanel.add(proteinsOutput);
+        proteinsPanel.add(new JLabel("g"));
+        fatsPanel.add(new JLabel("Fats:"));
+        fatsPanel.add(fatsOutput);
+        fatsPanel.add(new JLabel("g"));
+
+        // Aggiungi i pannelli al pannello principale
+        mealLabelsPanel.add(Box.createHorizontalGlue()); // Aggiunge uno spazio elastico
+
+        mealLabelsPanel.add(Box.createHorizontalStrut(15));
+        mealLabelsPanel.add(carbsPanel);
+        mealLabelsPanel.add(Box.createHorizontalStrut(15)); // Crea uno spazio di 15 pixel
+        mealLabelsPanel.add(proteinsPanel);
+        mealLabelsPanel.add(Box.createHorizontalStrut(15));
+        mealLabelsPanel.add(fatsPanel);
+        mealLabelsPanel.add(Box.createHorizontalStrut(15));
+
+        mealDistributionPanel.add(mealLabelsPanel);
+
+        //////////////////////////////////////////////////////////////////////////
 
 
         JPanel macrosGraphPanel = new JPanel(new GridLayout(1, 1));
-        macrosGraphPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+        macrosGraphPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE));
         mealDistributionPanel.add(macrosGraphPanel);
 
 
         JButton mealDistributionButton = new JButton("Edit Macros Distribution");
-        mealDistributionButton.setPreferredSize(new Dimension(mealDistributionButton.getPreferredSize().width, 40));
         mealDistributionPanel.add(mealDistributionButton, BorderLayout.SOUTH);
         return mealDistributionPanel;
-    }
-
-
-
-
-
-
-    private JPanel createTitlePanel(){
-        JLabel label = new JLabel("Daily Plan", SwingConstants.CENTER);
-        label.setFont(new Font("Arial", Font.BOLD, 36));
-        JPanel labelPanel = new JPanel(new FlowLayout());
-        labelPanel.add(label);
-
-        return labelPanel;
     }
 
 
@@ -309,6 +339,15 @@ public class DailyPlan extends JFrame {
         }
 
         return outputPanel;
+    }
+
+    private JPanel createTitlePanel(){
+        JLabel label = new JLabel("Daily Plan", SwingConstants.CENTER);
+        label.setFont(new Font("Arial", Font.BOLD, 36));
+        JPanel labelPanel = new JPanel(new FlowLayout());
+        labelPanel.add(label);
+
+        return labelPanel;
     }
 
     private JPanel createButtonPanel() {
