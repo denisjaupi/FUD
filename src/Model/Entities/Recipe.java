@@ -13,7 +13,7 @@ public class Recipe {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.ingredients = new ArrayList<>();
+        this.ingredients = ingredients;
     }
 
     public void addIngredient(Food f) {
