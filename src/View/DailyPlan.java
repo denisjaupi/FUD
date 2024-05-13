@@ -39,43 +39,33 @@ public class DailyPlan extends JFrame {
     private JPanel createMainPanel() {
         JPanel mainPanel = new JPanel(new BorderLayout());
         JPanel buttonPanel = createButtonPanel();
-        JPanel centralPanel = createContentPanel();
+        JPanel contentPanel = createContentPanel();
 
         mainPanel.add(buttonPanel, BorderLayout.WEST);
-        mainPanel.add(centralPanel, BorderLayout.CENTER);
+        mainPanel.add(contentPanel, BorderLayout.CENTER);
 
         return mainPanel;
     }
 
     private JPanel createContentPanel() {
 
-        JPanel centralPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
+        JPanel centralPanel = new JPanel();
+        centralPanel.setLayout(new BoxLayout(centralPanel, BoxLayout.Y_AXIS));
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1;
-        gbc.weighty = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        centralPanel.add(createTitlePanel(), gbc);
+        centralPanel.add(createTitlePanel());
+        centralPanel.add(createOutputPanel());
 
-        gbc.gridy = 1;
-        gbc.weighty = 0;
-        centralPanel.add(createOutputPanel(), gbc);
+        JPanel macrosDistributionPanel = createMacrosDistributionPanel();
+        macrosDistributionPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int) (getHeight() * 0.7)));
+        centralPanel.add(macrosDistributionPanel);
 
-        gbc.gridy = 2;
-        gbc.weighty = 0.65;
-        gbc.fill = GridBagConstraints.BOTH;
-        centralPanel.add(createMacrosDistributionPanel(), gbc);
-
-        gbc.gridy = 3;
-        gbc.weighty = 0.35;
-        centralPanel.add(createMealDistributionPanel(), gbc);
+        JPanel mealDistributionPanel = createMealDistributionPanel();
+        mealDistributionPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int) (getHeight() * 0.3)));
+        centralPanel.add(mealDistributionPanel);
 
         return centralPanel;
 
     }
-
 
     private JPanel createMacrosDistributionPanel() {
         JPanel macrosDistributionPanel = new JPanel(new GridBagLayout());
@@ -156,81 +146,88 @@ public class DailyPlan extends JFrame {
         // Imposta lo sfondo del grafico come trasparente
         pieChart.setBackgroundPaint(null);
         RingPlot plot = (RingPlot) pieChart.getPlot();
+
         // Imposta il generatore di etichette per mostrare le percentuali
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} = {2}"));
         plot.setLabelBackgroundPaint(Color.WHITE);
+        plot.setLabelOutlinePaint(null);
         plot.setBackgroundPaint(null);
         plot.setOutlineVisible(false);
+
         // Cambia i colori delle fette
-        Color darkBlue = new Color(0, 0, 122);
-        Color mediumBlue = new Color(0, 0, 255);
-        Color lightBlue = new Color(173, 216, 230);
+        Color darkBlue = new Color(70, 130, 180); // SteelBlue
+        Color mediumBlue = new Color(100, 149, 237); // CornflowerBlue
+        Color lightBlue = new Color(173, 216, 230); // LightBlue
         plot.setSectionPaint("Carbs", lightBlue);
         plot.setSectionPaint("Proteins", mediumBlue);
         plot.setSectionPaint("Fats", darkBlue);
 
         plot.setSectionDepth(0.3);
 
+        // Rimuovi la l'ombreggiatura
+        plot.setShadowPaint(null);
+        // Rimuovi le linee che sezionano il grafico
+        plot.setSectionOutlinesVisible(false);
+
+        // Modifica lo stile delle etichette
+        plot.setLabelFont(new Font("Arial", Font.PLAIN, 12));
+        plot.setLabelPaint(darkBlue);
+
         // Crea un pannello per il grafico e aggiungilo al pannello principale
         ChartPanel chartPanel = new ChartPanel(pieChart);
         chartPanel.setOpaque(false);
-        chartPanel.setMaximumSize(new Dimension(300, 300)); // Imposta la dimensione massima del grafico
+        chartPanel.setMaximumSize(new Dimension(200, 200)); // Imposta la dimensione massima del grafico
         singlePanel.add(chartPanel);
 
         macrosDistributionPanel.add(singlePanel, gbc);
 
         //////////////////////////////////////////////////////////////////////////
 
+        JPanel buttonPanel = new JPanel(new BorderLayout());
         JButton macrosDistributionButton = new JButton("Edit Macros Distribution");
-        macrosDistributionButton.setPreferredSize(new Dimension(macrosDistributionButton.getPreferredSize().width, 40));
+        macrosDistributionButton.setPreferredSize(new Dimension(macrosDistributionButton.getPreferredSize().width, 50)); // Imposta l'altezza a 50
+        macrosDistributionButton.setMinimumSize(new Dimension(macrosDistributionButton.getMinimumSize().width, 50)); // Imposta l'altezza minima a 50
+        buttonPanel.add(macrosDistributionButton, BorderLayout.CENTER);
         gbc.gridy = 3;
         gbc.weighty = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        macrosDistributionPanel.add(macrosDistributionButton, gbc);
+        macrosDistributionPanel.add(buttonPanel, gbc);
+
 
         return macrosDistributionPanel;
     }
 
     private JPanel createMealDistributionPanel() {
-        JPanel mealDistributionPanel = new JPanel(new GridLayout(4, 1));
-        mealDistributionPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.BLACK),
-                BorderFactory.createEmptyBorder(0, 20, 10, 20)
-        ));
+        JPanel mealDistributionPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        mealDistributionPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 10, 20));
 
         JLabel label = new JLabel("Meal Distribution", SwingConstants.LEFT);
         label.setFont(new Font("Arial", Font.BOLD, 24));
-        mealDistributionPanel.add(label);
+        label.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1;
+        gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        mealDistributionPanel.add(label, gbc);
 
-        //////////////////////////////////////////////////////////////////////////
-
-        // Crea il pannello delle etichette con un GridBagLayout
-        JPanel mealLabelsPanel = new JPanel(new GridBagLayout());
-        //mealLabelsPanel.setPreferredSize(new Dimension(mealDistributionPanel.getPreferredSize().width, 40));
+        JPanel mealLabelsPanel = new JPanel();
         mealLabelsPanel.setLayout(new BoxLayout(mealLabelsPanel, BoxLayout.X_AXIS));
 
-        // Crea il GridBagConstraints per gestire il layout
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weightx = 1;
-
-        // Crea i campi di testo
         JTextField carbsOutput = new JTextField(10);
         JTextField proteinsOutput = new JTextField(10);
         JTextField fatsOutput = new JTextField(10);
 
-        // Imposta i campi di testo come non modificabili
         carbsOutput.setEditable(false);
         proteinsOutput.setEditable(false);
         fatsOutput.setEditable(false);
 
-        // Crea i pannelli per le etichette e i campi di testo con un FlowLayout con gap ridotto
         JPanel carbsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
         JPanel proteinsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
         JPanel fatsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
 
-
-        // Aggiungi le etichette e i campi di testo ai pannelli
         carbsPanel.add(new JLabel("Carbs:"));
         carbsPanel.add(carbsOutput);
         carbsPanel.add(new JLabel("g"));
@@ -241,29 +238,37 @@ public class DailyPlan extends JFrame {
         fatsPanel.add(fatsOutput);
         fatsPanel.add(new JLabel("g"));
 
-        // Aggiungi i pannelli al pannello principale
-        mealLabelsPanel.add(Box.createHorizontalGlue()); // Aggiunge uno spazio elastico
-
-        mealLabelsPanel.add(Box.createHorizontalStrut(15));
+        mealLabelsPanel.add(Box.createHorizontalGlue());
         mealLabelsPanel.add(carbsPanel);
-        mealLabelsPanel.add(Box.createHorizontalStrut(15)); // Crea uno spazio di 15 pixel
+        mealLabelsPanel.add(Box.createHorizontalStrut(15));
         mealLabelsPanel.add(proteinsPanel);
         mealLabelsPanel.add(Box.createHorizontalStrut(15));
         mealLabelsPanel.add(fatsPanel);
-        mealLabelsPanel.add(Box.createHorizontalStrut(15));
+        mealLabelsPanel.add(Box.createHorizontalGlue());
 
-        mealDistributionPanel.add(mealLabelsPanel);
+        gbc.gridy = 1;
+        gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        mealDistributionPanel.add(mealLabelsPanel, gbc);
 
-        //////////////////////////////////////////////////////////////////////////
+        JPanel emptyPanel = new JPanel();
+        gbc.gridy = 2;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        mealDistributionPanel.add(emptyPanel, gbc);
 
 
-        JPanel macrosGraphPanel = new JPanel(new GridLayout(1, 1));
-        macrosGraphPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE));
-        mealDistributionPanel.add(macrosGraphPanel);
+        JPanel buttonPanel = new JPanel(new BorderLayout());
+        JButton macrosDistributionButton = new JButton("Edit Macros Distribution");
+        macrosDistributionButton.setPreferredSize(new Dimension(macrosDistributionButton.getPreferredSize().width, 50)); // Imposta l'altezza a 50
+        macrosDistributionButton.setMinimumSize(new Dimension(macrosDistributionButton.getMinimumSize().width, 50)); // Imposta l'altezza minima a 50
+        buttonPanel.add(macrosDistributionButton, BorderLayout.CENTER);
+        gbc.gridy = 3;
+        gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        mealDistributionPanel.add(buttonPanel, gbc);
 
 
-        JButton mealDistributionButton = new JButton("Edit Macros Distribution");
-        mealDistributionPanel.add(mealDistributionButton, BorderLayout.SOUTH);
         return mealDistributionPanel;
     }
 
