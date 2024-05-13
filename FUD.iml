@@ -7,15 +7,19 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library" exported="">
+       View_tables
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Desktop/postgresql-42.7.3.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/postgresql-42.7.3.jar!/" />
+       main
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
+       View_tables
     <orderEntry type="library" exported="" name="lib" level="project" />
+      main
   </component>
 </module>

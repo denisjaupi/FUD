@@ -17,6 +17,7 @@ public class Meal {
         foodList= new ArrayList<>();
         recipes= new ArrayList<>();
     }
+
     public int getId() {
         return id;
     }
@@ -26,20 +27,30 @@ public class Meal {
     public void addRecipe(Recipe r){
         recipes.add(r);
     }
+
+
     public void removeRecipe(int position){
         Recipe r=recipes.get(position);
         recipes.remove(position);
     }
+
+
     public void removeFood(int position){
         Food f=foodList.get(position);
         foodList.remove(f);
     }
+
+
     public ArrayList<Food> getFoodList(){  // TODO da capire se effettivamente serve
         return foodList;
     }
+
+
     public ArrayList<Recipe> getRecipes(){
         return recipes;
     }
+
+
     public void calculateTotalCalories(){
         for(Recipe r:recipes){
             this.info.calories +=r.info.calories;

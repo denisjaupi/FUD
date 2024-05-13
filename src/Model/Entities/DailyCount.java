@@ -7,15 +7,30 @@ public class DailyCount {
     private ArrayList<Meal> meals;
     private ArrayList<Exercise> exercises;
     NutritionalInfo info;
+    String username;
 
-    public DailyCount() {
+    public DailyCount(String userName) {
+        this.username=userName;
         meals= new ArrayList<>();
         exercises= new ArrayList<>();
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public ArrayList<Meal> getMeals() {
+        return meals;
+    }
+    public ArrayList<Exercise> getExercises() {
+        return exercises;
+    }
     public void addMeal(Meal meal) {
+
         meals.add(meal);
     }
     public void addExercise(Exercise exercise) {
+
         exercises.add(exercise);
     }
     public double calculateTotalCalories(int weight) {
