@@ -33,10 +33,9 @@ public class Home extends JFrame {
 
         contentPanel.add(createTitlePanel());
         contentPanel.add(createDataPanel());
-        contentPanel.add(createLogPanel());
         contentPanel.add(createProgressPanel());
         contentPanel.add(createDbButtonsPanel());
-
+        contentPanel.add(createLogPanel());
 
         return contentPanel;
     }
@@ -85,19 +84,19 @@ public class Home extends JFrame {
 
         // Crea il nuovo pannello da aggiungere in basso
         JPanel progressPanel = new JPanel(new GridLayout(2, 1));
-        progressPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN));
         progressPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 
 
         // Crea il pannello per le calorie
         JPanel progressCaloriesPanel = new JPanel(new GridLayout(2, 1));
-        progressCaloriesPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
+        progressCaloriesPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 20, 10));
 
         // Crea la progress bar
         JProgressBar progressBar = new JProgressBar();
+        progressBar.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         progressBar.setValue(50); // Imposta il valore iniziale a 50
 
-        JLabel caloriesLabel = new JLabel("Calories", SwingConstants.CENTER);
+        JLabel caloriesLabel = new JLabel("CALORIES", SwingConstants.CENTER);
 
         progressCaloriesPanel.add(caloriesLabel);
         progressCaloriesPanel.add(progressBar);
@@ -146,23 +145,24 @@ public class Home extends JFrame {
 
     private JPanel createDataPanel() {
         JPanel dataPanel = new JPanel(new BorderLayout());
-        dataPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+        // Imposta l'altezza preferita del dataPanel
+        dataPanel.setPreferredSize(new Dimension(dataPanel.getPreferredSize().width, 100));
 
         JPanel centerPanel = new JPanel(new GridBagLayout());
 
         // Crea il JTextField per le calorie giornaliere
         JTextField dailyCaloricIntakeField = createCenteredNonEditableTextField();
-        dailyCaloricIntakeField.setFont(new Font(dailyCaloricIntakeField.getFont().getName(), Font.BOLD, 52));
+        dailyCaloricIntakeField.setFont(new Font(dailyCaloricIntakeField.getFont().getName(), Font.BOLD, 56));
 
         // Crea il JTextField per le calorie bruciate
+        JLabel burnedCaloriesLabel = new JLabel("Burned");
         JTextField burnedCaloriesField = createCenteredNonEditableTextField();
-        burnedCaloriesField.setFont(new Font(dailyCaloricIntakeField.getFont().getName(), Font.BOLD, 36));
-        JLabel burnedCaloriesLabel = new JLabel("kcal bruciate");
+        burnedCaloriesField.setFont(new Font(dailyCaloricIntakeField.getFont().getName(), Font.BOLD, 42));
 
         // Crea il JTextField per le calorie rimanenti
+        JLabel remainingCaloriesLabel = new JLabel("Eaten");
         JTextField remainingCaloriesField = createCenteredNonEditableTextField();
-        remainingCaloriesField.setFont(new Font(dailyCaloricIntakeField.getFont().getName(), Font.BOLD, 36));
-        JLabel remainingCaloriesLabel = new JLabel("kcal rimanenti");
+        remainingCaloriesField.setFont(new Font(dailyCaloricIntakeField.getFont().getName(), Font.BOLD, 42));
 
         // Crea le restrizioni per il layout
         GridBagConstraints gbc = new GridBagConstraints();
@@ -175,7 +175,7 @@ public class Home extends JFrame {
         gbc.gridx = 0;
         centerPanel.add(remainingCaloriesField, gbc);
         gbc.gridy = 1;
-        gbc.insets = new Insets(5, 0, 0, 0); // Aggiungi 5px di spazio sopra all'etichetta
+        gbc.insets = new Insets(0, 0, 0, 0); // Riduci lo spazio sopra all'etichetta
         centerPanel.add(remainingCaloriesLabel, gbc);
 
         // Aggiungi il JTextField per le calorie giornaliere al pannello
@@ -189,10 +189,10 @@ public class Home extends JFrame {
         gbc.gridy = 0;
         centerPanel.add(burnedCaloriesField, gbc);
         gbc.gridy = 1;
-        gbc.insets = new Insets(5, 0, 0, 0); // Aggiungi 5px di spazio sopra all'etichetta
+        gbc.insets = new Insets(0, 0, 0, 0); // Riduci lo spazio sopra all'etichetta
         centerPanel.add(burnedCaloriesLabel, gbc);
 
-        dataPanel.add(centerPanel);
+        dataPanel.add(centerPanel, BorderLayout.SOUTH);
 
         return dataPanel;
     }
@@ -216,9 +216,9 @@ public class Home extends JFrame {
     }
 
     private void setupWindow() {
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setSize(1000, 600); // Imposta le dimensioni iniziali della finestra
+        setResizable(false); // Impedisce il ridimensionamento della finestra
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(800, 600));
     }
 
     private JPanel createButtonPanel() {

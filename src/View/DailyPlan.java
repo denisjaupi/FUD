@@ -30,9 +30,9 @@ public class DailyPlan extends JFrame {
     }
 
     private void setupWindow() {
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setSize(1000, 600); // Imposta le dimensioni iniziali della finestra
+        setResizable(false); // Impedisce il ridimensionamento della finestra
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(800, 600));
     }
 
     private JPanel createMainPanel() {

@@ -8,14 +8,11 @@ import java.awt.*;
 public class DailyTracker extends JFrame {
     public DailyTracker() {
 
-        // Set the window to full screen
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-
-        // Set the default close operation
+        // Set the title of the window
+        setSize(1000, 600); // Imposta le dimensioni iniziali della finestra
+        setResizable(false); // Impedisce il ridimensionamento della finestra
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Set the minimum size of the window
-        setMinimumSize(new Dimension(800, 600));
 
         // Create a main panel with a border layout
         JPanel mainPanel = new JPanel(new BorderLayout());
