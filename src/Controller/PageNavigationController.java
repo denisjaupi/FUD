@@ -1,9 +1,6 @@
 package Controller;
 
-import View.Home;
-import View.Profile;
-import View.DailyTracker;
-import View.DailyPlan;
+import View.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,5 +71,61 @@ public class PageNavigationController {
         DailyPlan dailyPlan = new DailyPlan();
         dailyPlan.setSize(frameSize); // set the size of the new window
         dailyPlan.setLocation(frameLocation); // set the location of the new window
+    }
+
+    public void navigateToFoodTable(){
+        // Store the size and location of the current window
+        frameSize = currentFrame.getSize();
+        frameLocation = currentFrame.getLocation();
+
+        // Close the current window
+        currentFrame.dispose();
+
+        // Open the DailyPlan window
+        FoodsTable foodTable = new FoodsTable();
+        foodTable.setSize(frameSize); // set the size of the new window
+        foodTable.setLocation(frameLocation); // set the location of the new window
+    }
+
+    public void navigateToRecipesTable(){
+        // Store the size and location of the current window
+        frameSize = currentFrame.getSize();
+        frameLocation = currentFrame.getLocation();
+
+        // Close the current window
+        currentFrame.dispose();
+
+        // Open the DailyPlan window
+        RecipesTable recipesTable = new RecipesTable();
+        recipesTable.setSize(frameSize); // set the size of the new window
+        recipesTable.setLocation(frameLocation); // set the location of the new window
+    }
+
+    public void navigateToTrainingTable(){
+        // Store the size and location of the current window
+        frameSize = currentFrame.getSize();
+        frameLocation = currentFrame.getLocation();
+
+        // Close the current window
+        currentFrame.dispose();
+
+        // Open the DailyPlan window
+        TrainingTable trainingTable = new TrainingTable();
+        trainingTable.setSize(frameSize); // set the size of the new window
+        trainingTable.setLocation(frameLocation); // set the location of the new window
+    }
+
+    public void navigateToAddFood(){
+        // Store the size and location of the current window
+        frameSize = currentFrame.getSize();
+        frameLocation = currentFrame.getLocation();
+
+        // Close the current window
+        currentFrame.dispose();
+
+        // Open the DailyPlan window
+        AddFoodView addFoodView = new AddFoodView();
+        addFoodView.setSize(frameSize); // set the size of the new window
+        addFoodView.setLocation(frameLocation); // set the location of the new window
     }
 }

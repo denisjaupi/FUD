@@ -17,7 +17,7 @@ public class dbFoodManager {
         return Db.result("SELECT name,calories, proteins, carbohydrates, fats FROM foods F left join nutritionalinfo N on( F.macro=N.id_macro) where name = '" + name + "'");
     }
 
-    public static void add_food_fromDb(String name, float calories, float proteins, float carbohydrates, float fats){
+    public static void add_food_Db(String name, float calories, float proteins, float carbohydrates, float fats){
         try {
             // Get the database connection
             Connection conn = Db.getConnection();

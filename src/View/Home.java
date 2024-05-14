@@ -4,6 +4,8 @@ import Controller.PageNavigationController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Home extends JFrame {
 
@@ -44,14 +46,16 @@ public class Home extends JFrame {
 
     private JPanel createLogPanel() {
         JPanel logPanel = new JPanel(new GridLayout(1, 2));
+        ButtonGroup buttonGroup = new ButtonGroup();
+        PageNavigationController pageNavigationController = new PageNavigationController(this);
         logPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Crea il primo pulsante
-        JButton logFudButton = new JButton("LOG FUD");
+        JToggleButton logFudButton = createButton("LOG FUD", buttonGroup, pageNavigationController::navigateToFoodTable);
         logFudButton.setPreferredSize(new Dimension(logFudButton.getPreferredSize().width, 60));
 
         // Crea il secondo pulsante
-        JButton addTrainingButton = new JButton("ADD TRAINING");
+        JToggleButton addTrainingButton = createButton("ADD TRAINING", buttonGroup, pageNavigationController::navigateToTrainingTable);
         addTrainingButton.setPreferredSize(new Dimension(addTrainingButton.getPreferredSize().width, 60));
 
         // Aggiungi i pulsanti al pannello
@@ -63,14 +67,17 @@ public class Home extends JFrame {
 
     private JPanel createDbButtonsPanel() {
         JPanel dbButtonsPanel = new JPanel(new GridLayout(2, 1));
+        ButtonGroup buttonGroup = new ButtonGroup();
+        PageNavigationController pageNavigationController = new PageNavigationController(this);
         dbButtonsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Crea il primo pulsante
-        JButton myFudButton = new JButton("My FUD");
+        JToggleButton myFudButton = createButton("FUD", buttonGroup, pageNavigationController::navigateToFoodTable);
         myFudButton.setPreferredSize(new Dimension(myFudButton.getPreferredSize().width, 50));
 
+
         // Crea il secondo pulsante
-        JButton myRecipesButton = new JButton("My Recipes");
+        JToggleButton myRecipesButton = createButton("My Recipes", buttonGroup, pageNavigationController::navigateToRecipesTable);
         myRecipesButton.setPreferredSize(new Dimension(myRecipesButton.getPreferredSize().width, 50));
 
         // Aggiungi i pulsanti al pannello
