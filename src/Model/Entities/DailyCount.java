@@ -1,6 +1,8 @@
 package Model.Entities;
 
 
+import Model.Database.Db;
+
 import java.util.ArrayList;
 
 public class DailyCount {
@@ -25,12 +27,10 @@ public class DailyCount {
     public ArrayList<Exercise> getExercises() {
         return exercises;
     }
-    public void addMeal(Meal meal) {
-
+    public  void addMeal(Meal meal) {
         meals.add(meal);
     }
     public void addExercise(Exercise exercise) {
-
         exercises.add(exercise);
     }
     public double calculateTotalCalories(int weight) {
@@ -47,6 +47,26 @@ public class DailyCount {
             this.info.calories-= exercise.countBurnCalories(weight);
         }
         return totalCalories;
+    }
+
+    public void deleteMeal(int id_meal) {
+        // Get the meal to be deleted
+        int i = 0;
+        Meal m = null;
+        while (i < meals.size()) {
+            if (meals.get(i).getId() == id_meal) {
+                m= meals.get(i);
+            }
+            i++;
+        }
+
+        // Delete the foods and recipes within the meal
+        assert m != null;
+        m.getFoodList().clear();
+        m.getRecipeList().clear();
+
+        // Delete the meal from the daily count
+        meals.remove(m);
     }
 }
 

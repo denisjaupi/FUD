@@ -10,8 +10,9 @@ public class PersonalData{
     private String activity;  //quante volte ti alleni
     private String goal;
     private CalculatedProfileData calculateProfileData;
+    private int count_meal;
 
-    public PersonalData(double height, double weight, int age, String gender, String activity, String goal){
+    public PersonalData(double height, double weight, int age, String gender, String activity, String goal, int count_meal){
         this.height = height;
         this.weight = weight;
         this.age = age;
@@ -19,6 +20,10 @@ public class PersonalData{
         this.activity = activity;
         this.goal = goal;
         calculateAndProfileData();
+        this.count_meal = count_meal;
+    }
+    public int getCount_meal(){
+        return count_meal;
     }
 
     public double getHeight(){
