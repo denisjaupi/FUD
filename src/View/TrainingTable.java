@@ -4,8 +4,7 @@ import Controller.PageNavigationController;
 import Controller.dbExerciseManager;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
+import javax.swing.table.*;
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,7 +47,7 @@ public class TrainingTable extends JFrame {
         JPanel tablePanel = new JPanel(new BorderLayout());
 
         // Creare un modello per la tabella
-        DefaultTableModel model = new DefaultTableModel(new Object[]{"Name", "Met", "Intensity"}, 0);
+        DefaultTableModel model = new DefaultTableModel(new Object[]{"Name", "Intensity", "Add"}, 0);
 
         // Creare la tabella con il modello
         JTable table = new JTable(model);
@@ -57,6 +56,62 @@ public class TrainingTable extends JFrame {
         JTableHeader header = table.getTableHeader();
         header.setFont(new Font("Arial", Font.BOLD, 18));
 
+        ///////////////////////////////////////////////////////
+        PageNavigationController pageNavigationController = new PageNavigationController(this);
+
+        // Aggiungi un TableCellRenderer e un TableCellEditor alla colonna "Add"
+        TableColumn addColumn = table.getColumn("Add");
+        addColumn.setCellRenderer(new TableCellRenderer() {
+            JButton button = new JButton("+");
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                return button;
+            }
+        });
+        addColumn.setCellEditor(new DefaultCellEditor(new JCheckBox()) {
+            @Override
+            public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+                JButton button = new JButton("+");
+                button.addActionListener(e -> {
+                    // Ottieni il nome e l'intensità dell'esercizio selezionato
+                    String name = (String) table.getValueAt(row, 0);
+                    String intensity = (String) table.getValueAt(row, 1);
+
+                    pageNavigationController.navigateToAddTraining(name, intensity);
+                });
+                return button;
+            }
+        });
+
+        ///////////////////////////////////////////////////////
+
+        // Ottieni il modello delle colonne
+        TableColumnModel columnModel = table.getColumnModel();
+
+        // Imposta la larghezza preferita, minima e massima per la prima colonna
+        TableColumn firstColumn = columnModel.getColumn(0);
+        firstColumn.setPreferredWidth(400);
+        firstColumn.setMinWidth(400);
+        firstColumn.setMaxWidth(400);
+
+        // Imposta la larghezza preferita, minima e massima per la seconda colonna
+        TableColumn secondColumn = columnModel.getColumn(1);
+        secondColumn.setPreferredWidth(400);
+        secondColumn.setMinWidth(400);
+        secondColumn.setMaxWidth(400);
+
+        // Imposta la larghezza preferita, minima e massima per la terza colonna
+        TableColumn thirdColumn = columnModel.getColumn(2);
+        thirdColumn.setPreferredWidth(100);
+        thirdColumn.setMinWidth(100);
+        thirdColumn.setMaxWidth(100);
+
+        // Imposta la larghezza della tabella e del JScrollPane
+        table.setPreferredScrollableViewportSize(new Dimension(500, 500));
+        table.setFillsViewportHeight(true);
+
+        ///////////////////////////////////////////////////////
+
         // Riempire il modello con i dati dal database
         ResultSet rs = dbExerciseManager.getExercise();
 
@@ -64,10 +119,9 @@ public class TrainingTable extends JFrame {
             while(rs.next()){
 
                 String name = rs.getString("name");
-                String met = rs.getString("met");
                 String intensity = rs.getString("intensity");
 
-                Object[] row = new Object[]{name, met, intensity};
+                Object[] row = new Object[]{name, intensity};
                 model.addRow(row);
 
             }

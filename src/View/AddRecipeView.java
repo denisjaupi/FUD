@@ -113,7 +113,7 @@ public class AddRecipeView extends JFrame {
 
         // Seconda colonna
         constraints2.gridx = 1;
-        constraints2.weightx = 0.2;  // Imposta la larghezza relativa della seconda colonna
+        constraints2.weightx = 0.15;  // Imposta la larghezza relativa della seconda colonna
         JComboBox<String> foodComboBox = new JComboBox<>();
         try {
             ResultSet rs = dbFoodManager.getFood();
@@ -128,7 +128,7 @@ public class AddRecipeView extends JFrame {
 
         // Terza colonna
         constraints2.gridx = 2;
-        constraints2.weightx = 0.15;  // Imposta la larghezza relativa della terza colonna
+        constraints2.weightx = 0.20;  // Imposta la larghezza relativa della terza colonna
         JLabel quantityLabel = new JLabel("Quantity (g):");
         quantityLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         chooseFoodPanel.add(quantityLabel, constraints2);

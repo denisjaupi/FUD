@@ -142,4 +142,18 @@ public class PageNavigationController {
         addRecipeView.setSize(frameSize); // set the size of the new window
         addRecipeView.setLocation(frameLocation); // set the location of the new window
     }
+
+    public void navigateToAddTraining(String name, String intensity){
+        // Store the size and location of the current window
+        frameSize = currentFrame.getSize();
+        frameLocation = currentFrame.getLocation();
+
+        // Close the current window
+        currentFrame.dispose();
+
+        // Open the DailyPlan window
+        AddTrainingView addTrainingView = new AddTrainingView(name, intensity);
+        addTrainingView.setSize(frameSize); // set the size of the new window
+        addTrainingView.setLocation(frameLocation); // set the location of the new window
+    }
 }
