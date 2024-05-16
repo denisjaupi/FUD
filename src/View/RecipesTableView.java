@@ -10,9 +10,9 @@ import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class RecipesTable extends JFrame {
+public class RecipesTableView extends JFrame {
 
-    public RecipesTable() {
+    public RecipesTableView() {
         setupWindow();
         JPanel mainPanel = createMainPanel();
         add(mainPanel);
@@ -23,7 +23,7 @@ public class RecipesTable extends JFrame {
 
     private JPanel createMainPanel() {
         JPanel mainPanel = new JPanel(new BorderLayout());
-        JPanel backButtonPanel = createBackButtonPanel();
+        JPanel backButtonPanel = createButtonPanel();
         JPanel contentPanel = createContentPanel();
 
         mainPanel.add(backButtonPanel, BorderLayout.WEST);
@@ -98,14 +98,17 @@ public class RecipesTable extends JFrame {
 
     ////////////////////////////////////////////////////////////////
 
-    private JPanel createBackButtonPanel() {
+    private JPanel createButtonPanel() {
+
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
         PageNavigationController pageNavigationController = new PageNavigationController(this);
 
-        JToggleButton button1 = createButton("Back", buttonGroup, pageNavigationController::navigateToHome);
+        JToggleButton backButton = createButton("Back", buttonGroup, pageNavigationController::navigateToHome);
+        JToggleButton addFoodButton = createButton("New Recipe", buttonGroup, pageNavigationController::navigateToAddRecipe);
 
-        buttonPanel.add(button1);
+        buttonPanel.add(backButton);
+        buttonPanel.add(addFoodButton);
 
         return buttonPanel;
     }

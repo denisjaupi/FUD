@@ -82,7 +82,7 @@ public class PageNavigationController {
         currentFrame.dispose();
 
         // Open the DailyPlan window
-        FoodsTable foodTable = new FoodsTable();
+        FoodsTableView foodTable = new FoodsTableView();
         foodTable.setSize(frameSize); // set the size of the new window
         foodTable.setLocation(frameLocation); // set the location of the new window
     }
@@ -96,7 +96,7 @@ public class PageNavigationController {
         currentFrame.dispose();
 
         // Open the DailyPlan window
-        RecipesTable recipesTable = new RecipesTable();
+        RecipesTableView recipesTable = new RecipesTableView();
         recipesTable.setSize(frameSize); // set the size of the new window
         recipesTable.setLocation(frameLocation); // set the location of the new window
     }
@@ -127,5 +127,19 @@ public class PageNavigationController {
         AddFoodView addFoodView = new AddFoodView();
         addFoodView.setSize(frameSize); // set the size of the new window
         addFoodView.setLocation(frameLocation); // set the location of the new window
+    }
+
+    public void navigateToAddRecipe(){
+        // Store the size and location of the current window
+        frameSize = currentFrame.getSize();
+        frameLocation = currentFrame.getLocation();
+
+        // Close the current window
+        currentFrame.dispose();
+
+        // Open the DailyPlan window
+        AddRecipeView addRecipeView = new AddRecipeView();
+        addRecipeView.setSize(frameSize); // set the size of the new window
+        addRecipeView.setLocation(frameLocation); // set the location of the new window
     }
 }

@@ -6,17 +6,13 @@ import Controller.dbFoodManager;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class FoodsTable extends JFrame {
+public class FoodsTableView extends JFrame {
 
-    public FoodsTable() {
+    public FoodsTableView() {
         setupWindow();
         JPanel mainPanel = createMainPanel();
         add(mainPanel);
@@ -53,7 +49,7 @@ public class FoodsTable extends JFrame {
         JPanel tablePanel = new JPanel(new BorderLayout());
 
         // Creare un modello per la tabella
-        DefaultTableModel model = new DefaultTableModel(new Object[]{"Name", "Calories", "Proteins", "Carbohydrates", "Fats"}, 0);
+        DefaultTableModel model = new DefaultTableModel(new Object[]{"Name", "Calories (for 100g)", "Proteins", "Carbohydrates", "Fats"}, 0);
 
         // Creare la tabella con il modello
         JTable table = new JTable(model);
@@ -150,10 +146,10 @@ public class FoodsTable extends JFrame {
         PageNavigationController pageNavigationController = new PageNavigationController(this);
 
         JToggleButton backButton = createButton("Back", buttonGroup, pageNavigationController::navigateToHome);
-        JToggleButton addFoodButton = createButton("Add Food", buttonGroup, pageNavigationController::navigateToAddFood);
+        JToggleButton newFoodButton = createButton("New Food", buttonGroup, pageNavigationController::navigateToAddFood);
 
         buttonPanel.add(backButton);
-        buttonPanel.add(addFoodButton);
+        buttonPanel.add(newFoodButton);
 
         return buttonPanel;
     }

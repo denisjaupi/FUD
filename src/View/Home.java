@@ -51,7 +51,7 @@ public class Home extends JFrame {
         logPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Crea il primo pulsante
-        JToggleButton logFudButton = createButton("LOG FUD", buttonGroup, pageNavigationController::navigateToFoodTable);
+        JToggleButton logFudButton = createButton("LOG FUD", buttonGroup, pageNavigationController::navigateToDailyTracker);
         logFudButton.setPreferredSize(new Dimension(logFudButton.getPreferredSize().width, 60));
 
         // Crea il secondo pulsante

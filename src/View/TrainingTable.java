@@ -101,9 +101,9 @@ public class TrainingTable extends JFrame {
         ButtonGroup buttonGroup = new ButtonGroup();
         PageNavigationController pageNavigationController = new PageNavigationController(this);
 
-        JToggleButton button1 = createButton("Back", buttonGroup, pageNavigationController::navigateToHome);
+        JToggleButton backButton = createButton("Back", buttonGroup, pageNavigationController::navigateToHome);
 
-        buttonPanel.add(button1);
+        buttonPanel.add(backButton);
 
         return buttonPanel;
     }
