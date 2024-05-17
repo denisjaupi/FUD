@@ -1,7 +1,7 @@
 package Model.Database;
 import java.sql.*;
 
-public class Db {
+public class Db{
     private static final String URL = "jdbc:postgresql://localhost:5432/FUD";
     private static final String USERNAME = "postgres";
     private static final String PASSWORD = "postgres";

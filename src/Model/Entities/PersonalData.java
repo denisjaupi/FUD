@@ -3,6 +3,7 @@ package Model.Entities;
 import Model.Util.CalculatedProfileData;
 
 public class PersonalData{
+    private int id;
     private double height;
     private double weight;
     private int age;
@@ -25,7 +26,13 @@ public class PersonalData{
     public int getCount_meal(){
         return count_meal;
     }
+    public int getId(){
+        return id;
+    }
 
+    public void setId(int id){
+        this.id = id;
+    }
     public double getHeight(){
         return height;
     }
@@ -74,16 +81,20 @@ public class PersonalData{
         this.goal = goal;
     }
 
+    public void setCount_meal(int count_meal){
+        this.count_meal = count_meal;
+    }
+
     public CalculatedProfileData getCalculatedProfileData(){
         return calculateProfileData;
     }
 
-    private void calculateAndProfileData(){
-        String bmr=String.format("%.3f", calculateBMR());
-        String bmi=String.format("%.3f", calculateBMI());
-        String waterRequirement=String.format("%.3f", calculateWaterRequirement());
-        String caloricIntake=String.format("%.3f", calculateCaloricIntake());
-        calculateProfileData=new CalculatedProfileData(bmi, waterRequirement,bmr, caloricIntake);
+    public void calculateAndProfileData(){
+        double bmr = calculateBMR();
+        double bmi = calculateBMI();
+        double waterRequirement = calculateWaterRequirement();
+        double caloricIntake = calculateCaloricIntake();
+        calculateProfileData = new CalculatedProfileData(bmi, waterRequirement, bmr, caloricIntake);
     }
 
     // Calcolo del BMR usando la formula di Mifflin-St Jeor

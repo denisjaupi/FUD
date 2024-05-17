@@ -5,7 +5,6 @@ import java.sql.*;
 
 public class dbExerciseManager {
 
-
     public static ResultSet getExercise() {
         return Db.result("SELECT name,met, intensity FROM exercise");
     }

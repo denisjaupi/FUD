@@ -7,10 +7,12 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class dbRecipeManager {
+
     private static User user;
     static RecipeList recipeList;
     static ArrayList<Meal> meal;
     static DailyCount dailyCount;
+
 
 
     public dbRecipeManager() {
@@ -22,6 +24,8 @@ public class dbRecipeManager {
     public void setUser(User u) {
         user=u;
     }
+
+
     public User getUser() {
         return user;
     }
@@ -153,6 +157,49 @@ public class dbRecipeManager {
         }
     }
 
+    public void select()  {
+        try {
+            String query = "select * from recipes where id_user=" + user.getId();
+            ResultSet rs = Db.result(query);
+            if (rs.next()) {
+                do {
+                    Recipe r = selectRecipe(rs);
+                    String query2 = "select * from ingredients where recipe=" + r.getId();
+                    ResultSet rs_ingr = Db.result(query2);
+                    String query3 = "select * from foods where id_food=" + rs_ingr.getInt("food");
+                    ResultSet rs_food = Db.result(query3);
+                    if (rs_food.next()) {
+                        do {
+                            Food f = dbFoodManager.selectFood(rs_food);
+                            r.addIngredient(f);
+                        } while (rs_food.next());
+                    }
+                    user.getRecipe().addRecipe(r);
+                } while (rs.next());
+            }
+        }catch (SQLException e){
+            System.err.println("Errore durante l'esecuzione della query nella select_recipe: " + e.getMessage());
+        }
+    }
+
+    public static Recipe selectRecipe(ResultSet rs) throws SQLException {
+        String name_recipe = rs.getString("name");
+        String desc= rs.getString("description");
+        int id_recipe= rs.getInt("id_recipe");
+        String query1 = "select * from nutritionalinfo where id_macro=" + rs.getInt("macro");
+        ResultSet rs3 = Db.result(query1);
+        NutritionalInfo macro = new NutritionalInfo(rs3.getDouble("calories"), rs3.getDouble("proteins"), rs3.getDouble("fats"), rs3.getDouble("carbohydrates"));
+        Recipe r= new Recipe(id_recipe, name_recipe, desc);
+        r.setNutritionalInfo(macro);
+        return r;
+    }
+
+    public void updateRecipe(int id, String name, String desc){
+        String query="update recipes set name='"+name+"', description='"+desc+"' where id_recipe="+id;
+        Db.result(query);
+        user.getRecipe().updateRecipe_list(id, name, desc);
+        user.getDailyCount().getMeals().forEach(m->m.updateRecipe_meal(id, name, desc));
+    }
 
 }
 

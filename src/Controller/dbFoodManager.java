@@ -2,10 +2,12 @@ package Controller;
 
 import Model.Database.Db;
 import Model.Entities.Food;
+import Model.Entities.NutritionalInfo;
 
 import java.sql.*;
 
 public class dbFoodManager {
+
 
     public static ResultSet getFood() {
         return Db.result("SELECT name,calories, proteins, carbohydrates, fats FROM foods F left join nutritionalinfo N on( F.macro=N.id_macro)");
@@ -53,6 +55,7 @@ public class dbFoodManager {
             e.printStackTrace();
         }
     }
+
     public static void remove_food_withName(String name) {
         try {
             // Get the database connection
@@ -72,5 +75,18 @@ public class dbFoodManager {
             e.printStackTrace();
         }
     }
+
+
+    public static  Food selectFood(ResultSet rs) throws SQLException {
+        String name_food = rs.getString("name");
+        String query1 = "select * from nutritionalinfo where id_macro=" + rs.getInt("macro");
+        ResultSet rs3 = Db.result(query1);
+        NutritionalInfo macro= new NutritionalInfo(rs3.getDouble("calories"), rs3.getDouble("proteins"), rs3.getDouble("fats"), rs3.getDouble("carbohydrates"));
+        ;
+        Food f= new Food(rs.getInt("id_food"), name_food, macro);
+        f.setQuantity(rs.getInt("quantity"));
+        return f;
+    }
+
 
 }

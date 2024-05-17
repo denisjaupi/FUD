@@ -10,11 +10,15 @@ public class DailyCount {
     private ArrayList<Exercise> exercises;
     NutritionalInfo info;
     String username;
+    private  int num_exe;
+    private  int num_meal;
 
     public DailyCount(String userName) {
         this.username=userName;
         meals= new ArrayList<>();
         exercises= new ArrayList<>();
+        num_exe=0;
+        num_meal=0;
     }
 
     public String getUsername() {
@@ -29,9 +33,27 @@ public class DailyCount {
     }
     public  void addMeal(Meal meal) {
         meals.add(meal);
+        updateNum_meal(1);
     }
     public void addExercise(Exercise exercise) {
         exercises.add(exercise);
+        updateNum_exe(1);
+
+    }
+
+    private void updateNum_exe(int control) {
+        if (control == 1) {
+            num_exe = num_exe+ 1;
+        } else if (control == 0) {
+            num_exe = num_exe - 1;
+        }
+    }
+    private void updateNum_meal(int control) {
+        if (control == 1) {
+            num_meal= num_meal + 1;
+        } else if (control == 0) {
+            num_meal = num_meal - 1;
+        }
     }
     public double calculateTotalCalories(int weight) {
         double totalCalories = 0.0;
@@ -50,23 +72,22 @@ public class DailyCount {
     }
 
     public void deleteMeal(int id_meal) {
-        // Get the meal to be deleted
-        int i = 0;
-        Meal m = null;
-        while (i < meals.size()) {
-            if (meals.get(i).getId() == id_meal) {
-                m= meals.get(i);
+        meals.removeIf(meal -> {
+            if (meal.getId() == id_meal) {
+                // Delete the foods and recipes within the meal
+                meal.getFoodList().clear();
+                meal.getRecipeList().clear();
+                // Update the meal count
+                updateNum_meal(0);
+                return true;
             }
-            i++;
-        }
+            return false;
+        });
+    }
 
-        // Delete the foods and recipes within the meal
-        assert m != null;
-        m.getFoodList().clear();
-        m.getRecipeList().clear();
-
-        // Delete the meal from the daily count
-        meals.remove(m);
+    public void deleteExercise(int id) {
+        exercises.removeIf(exercise -> exercise.getId() == id);
+        updateNum_exe(0);
     }
 }
 

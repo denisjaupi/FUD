@@ -2,14 +2,12 @@ package Model.Entities;
 
 public class Food {
     private long id;
-    private long idType;
     private final String name;
     private  NutritionalInfo info;
     private int quantity;
 
-    public Food(int id, int idType, String n, NutritionalInfo i, int q) {
+    public Food(int id,  String n, NutritionalInfo i) {
         this.id = id;
-        this.idType = idType;
         this.name = n;
         this.info=i; //Nutritional info for 100g
     }
@@ -24,9 +22,6 @@ public class Food {
     }
     public long getId(){
         return id;
-    }
-    public long getId_Type(){
-        return idType;
     }
     public String getName(){
         return name;

@@ -1,32 +1,91 @@
 package Controller;
 
 import Model.Database.Db;
+import Model.Entities.PersonalData;
+import Model.Entities.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class dbUserManager {
+    private static User user;
+    private PersonalData pd;
+    private dbPersonalDataManager dbPM = new dbPersonalDataManager();
 
-    public static void deleteUser(int id) {
-        String query = "DELETE FROM users WHERE id_user = " + id;
+    public dbUserManager() {
+       dbPM.setUser(user);
+    }
+
+    public void setUser(User u){
+        user = u;
+    }
+
+    public void selectData(String email)  {
+        try {
+            String query = "SELECT * FROM users WHERE email = '" + email + "'";
+            ResultSet rs = Db.result(query);
+            if (rs.next()) {
+                user.setId(rs.getInt("id_user"));
+                user.setUserName(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("psw"));
+                query = "select count(*) from personaldata where id_info=" + rs.getInt("id_info");
+                Db.result(query);
+                if (Db.result(query).getInt(0) == 1) {
+                    dbPM.selectPersonalData(rs.getInt("id_info"));
+                }
+            }
+        }catch(SQLException e){
+            System.err.println("Errore durante l'esecuzione della query nella select_user: " + e.getMessage());
+        }
+    }
+
+    public static void deleteUser(int id) throws SQLException {
+        dbActivitiesManager.deleteActivities_withUser(id);
+        String query="select id_info from users where id_user=" +id;
+        ResultSet id_i=Db.result(query);
+        int id_info=id_i.getInt(0);
+        dbCalculateProfileDataManager.deleteCalculateProfileData(id_info);
+        String query1;
+        query="select meal from diets where id_user="+id;
+        while(Db.result(query).next()){
+            dbMealManager.deleteMeal_db(Db.result(query).getInt(0));
+        }
+        dbDietsManager.deleteAllMeals(id);
+
+        query="Select id_recipe from recipes where id_user="+id;
+        while(Db.result(query).next()){
+            dbRecipeManager.removeRecipe_withId(Db.result(query).getInt(0));
+        }
+        query1="select id_info from users where id_user="+id;
+        dbPersonalDataManager.deletePersonalData(Db.result(query1).getInt(0));
+
+        query = "DELETE FROM users WHERE id_user = " + id;
         Db.result(query);
     }
+
+
     public static void updateUser(int id, String username, String email, String password) {
         String query = "UPDATE users SET  username = '" + username + "', email = '" + email + "', psw = '" + password + "' WHERE id_user = " + id;
         Db.result(query);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setUserName(username);
     }
+
+
     public static void addUser(String username, String email, String password) {
         String query = "INSERT INTO users (username, email, psw) VALUES ('" + username + "', '" + email + "', '" + password + "')";
         Db.result(query);
     }
-    public static void addinfo(int id_user,String username, String email, String password, int id_info) {
-        String query = "update users SET  username = '" + username + "', email = '" + email + "', psw = '" + password + "', id_info='"+id_info+"' WHERE id_user = " + id_user;
+
+
+    public static void addinfo(int id_user, int id_info) {
+        String query = "update users SET  id_info='"+id_info+"' WHERE id_user = " + id_user;
         Db.result(query);
     }
-    public static void updateInfo(int id_user, int id_info) {
-        String query = "UPDATE users SET id_info = " + id_info + " WHERE id_user = " + id_user;
-        Db.result(query);
-    }
+
+
     public static boolean checkCredentials(String  email, String password) throws SQLException {
         String query = "SELECT Count(*) FROM users WHERE email = '" + email + "' AND psw = '" + password + "'";
         ResultSet rs= Db.result(query) ;

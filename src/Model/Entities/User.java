@@ -1,7 +1,7 @@
 package Model.Entities;
 
 public class User {
-    private long id;
+    private int id;
     private String email;
     private String password;
     private String userName;
@@ -9,7 +9,8 @@ public class User {
     private RecipeList recipe;
     private DailyCount dailyCount;
 
-    public User(long id, String email, String password, String userName, PersonalData pd) {
+    public User() {}
+    public User(int id, String email, String password, String userName, PersonalData pd) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -18,7 +19,23 @@ public class User {
         dailyCount= new DailyCount(this.userName);
         recipe= new RecipeList(this.userName);
     }
-    public long getId() {
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+    public void setPersonalData(PersonalData pd) {
+        this.pd = pd;
+    }
+    public int getId() {
         return id;
     }
 

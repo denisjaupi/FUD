@@ -7,14 +7,19 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class dbMealManager {
-
     private User user;
     private static DailyCount dailyCount;
 
-    public dbMealManager(User user) {
-        this.user = user;
+
+
+    public dbMealManager() {
         dailyCount = user.getDailyCount();
     }
+
+    public void setUser(User u){
+        user = u;
+    };
+
 
     public void addMeal_fromDb(String type, NutritionalInfo info, ArrayList<Food> foods, ArrayList<Recipe> recipes) {
 
@@ -57,7 +62,7 @@ public class dbMealManager {
         }
     }
 
-    public void deleteMeal_db(int id_meal){
+    public static void deleteMeal_db(int id_meal){
 
         dbRecipeMealManager.deleteAllRecipes(id_meal);
         dbFoodsMealManager.deleteAllFoods(id_meal);
@@ -92,6 +97,8 @@ public class dbMealManager {
         }
 
     }
+
+
     public static void removeOneFood(int id_meal,String name_food) throws SQLException {
         String query = "Select id_food from foods where name='" + name_food + "'";
         ResultSet rs = Db.result(query);
@@ -101,6 +108,53 @@ public class dbMealManager {
         for (Meal meal : m) {
             if (meal.getId() == id_meal) {
                 meal.removeFood(id_food);
+            }
+        }
+    }
+
+    public Meal select(int id_meal, String type) throws SQLException {
+        String query="select * from meals where id_meal="+id_meal;
+        ResultSet rs1 = Db.result(query);
+        query="select * from nutritionalinfo where id_macro="+(rs1.getInt("macro"));
+        ResultSet rs_macro_meal= Db.result(query);
+        NutritionalInfo macro_meal = new NutritionalInfo(rs_macro_meal.getDouble("calories"), rs_macro_meal.getDouble("proteins"), rs_macro_meal.getDouble("fats"), rs_macro_meal.getDouble("carbohydrates"));
+        Meal m= new Meal(id_meal, type);
+        query="select * from foods where id_food=(select food from foodsmeal where meal="+id_meal+")";
+        ResultSet rs2 = Db.result(query);
+        if(rs2.next()) {
+            do {
+                Food f= dbFoodManager.selectFood(rs2);
+                m.addFood(f);
+            }while(rs2.next());
+        }
+        query="select * from recipes where id_recipe = (select recipe from recipemeal where meal="+id_meal+")";
+        ResultSet rs4 = Db.result(query);
+        if(rs4.next()) {
+            do {
+                Recipe r= dbRecipeManager.selectRecipe(rs4);
+                String query2="select * from ingredients where recipe="+r.getId();
+                ResultSet rs_ingr=Db.result(query2);
+                String query3="select * from foods where id_food="+rs_ingr.getInt("food");
+                ResultSet rs_food = Db.result(query3);
+                if(rs_food.next()) {
+                    do {
+                        Food f = dbFoodManager.selectFood(rs_food);
+                        r.addIngredient(f);
+                    } while (rs_food.next());
+                }
+                m.addRecipe(r);
+                m.setInfo(macro_meal);
+            }while(rs4.next());
+        }
+        return m;
+    }
+
+    public void updateQuantity_food(int id_meal, int id_food, int quantity){
+        dbFoodsMealManager.updateQuantity(id_meal, id_food, quantity);
+        ArrayList<Meal> m=dailyCount.getMeals();
+        for(Meal meal:m){
+            if(meal.getId()==id_meal){
+                meal.updateQuantity_f(id_food,quantity);
             }
         }
     }

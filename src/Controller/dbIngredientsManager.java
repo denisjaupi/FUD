@@ -10,14 +10,19 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class dbIngredientsManager {
-    private final User user;
+
+    private User user;
     private RecipeList recipeList;
     private static ArrayList<Recipe> recipes;
 
-    public dbIngredientsManager(User u) {
-        user = u;
+
+    public dbIngredientsManager() {
         recipeList = user.getRecipe();
         recipes= recipeList.getRecipes();
+    }
+
+    public void setUser(User u) {
+        user = u;
     }
 
     public static void addIngredients(ArrayList<Food> foods, int id_recipe) {
@@ -35,6 +40,7 @@ public class dbIngredientsManager {
         }
     }
 
+
     private static int getFood_idFromName(String foodName) throws SQLException {
         String query = "SELECT id_food FROM foods WHERE name = '" + foodName + "'";
         ResultSet rs = Db.result(query);
@@ -43,6 +49,7 @@ public class dbIngredientsManager {
         }
         return -1; // if id not exist
     }
+
 
     private static void insertMeal_foodRecord(int id_recipe, int id_food, int quantity) throws SQLException {
         String query = "INSERT INTO ingredients (recipe, food, quantity) VALUES (" + id_recipe + ", " + id_food + ", " + quantity + ")";
@@ -56,9 +63,13 @@ public class dbIngredientsManager {
 
         System.out.println("Ingredienti eliminata con successo.");
     }
+
+
     public static ResultSet getIngredients_withRecipe(int id_recipe) {
         return Db.result("SELECT F.name, I.quantity FROM ingredients I left join foods F on( I.food=F.id_food) where I.recipe = " + id_recipe);
     }
+
+
     public static void deleteIngredients_withRecipeandName(int id_recipe, String name) {
         String query = "DELETE FROM ingredients WHERE recipe = '"+ id_recipe+"' AND food = (SELECT id_food FROM foods WHERE name = '"+name+"');";
         Db.result(query);
@@ -70,6 +81,7 @@ public class dbIngredientsManager {
 
         System.out.println("Ingredienti eliminata con successo.");
     }
+
 
     public static void updateQuantity(int id_recipe, String name, int quantity) {
         String query = "UPDATE ingredients SET quantity = "+quantity+" WHERE recipe = '"+ id_recipe+"' AND food = (SELECT id_food FROM foods WHERE name = '"+name+"');";

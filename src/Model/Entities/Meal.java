@@ -160,4 +160,21 @@ public class Meal {
     public ArrayList<Food> getFoods() {
         return foodList;
     }
+
+    public void updateQuantity_f(int id_food, int quantity){
+        for(Food f:foodList){
+            if(f.getId()==id_food){
+                f.setQuantity(quantity);
+            }
+        }
+    }
+
+    public void updateRecipe_meal(int id_recipe, String name, String desc){
+        for(Recipe r:recipeList){
+            if(r.getId()==id_recipe){
+                r.setName(name);
+                r.setDesc(desc);
+            }
+        }
+    }
 }

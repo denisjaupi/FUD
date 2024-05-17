@@ -8,20 +8,36 @@ public class Recipe {
     private String description;
     private ArrayList<Food> ingredients;
     public NutritionalInfo info;
+    private int num_prod_food;
 
     public Recipe(int id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
     }
+    public int getNum_prod_food() {
+        return num_prod_food;
+    }
+
+    public void setNutritionalInfo(NutritionalInfo info) {
+        this.info = info;
+    }
 
     public void addIngredient(Food f) {
         this.ingredients.add(f);
+        updateNum_food(1);
     }
     public int getId() {
         return id;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDesc(String description) {
+        this.description = description;
+    }
     public String getName(){
         return name;
     }
@@ -56,6 +72,7 @@ public class Recipe {
         for (Food f : ingredients) {
             if (f.getName().equals(name)) {
                 ingredients.remove(f);
+                updateNum_food(0);
                 break;
             }
         }
@@ -78,6 +95,14 @@ public class Recipe {
                 f.setQuantity(quantity);
                 break;
             }
+        }
+    }
+
+    private void updateNum_food(int control) {
+        if (control == 1) {
+            num_prod_food = num_prod_food + 1;
+        } else if (control == 0) {
+            num_prod_food = num_prod_food - 1;
         }
     }
 }

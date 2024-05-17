@@ -58,6 +58,15 @@ public class RecipeList {
         return num_prod;
     }
 
+    public void updateRecipe_list(int id_recipe, String name, String desc){
+        for(Recipe r:recipes){
+            if(r.getId()==id_recipe){
+                r.setName(name);
+                r.setDesc(desc);
+            }
+        }
+    }
+
 }
 
 
