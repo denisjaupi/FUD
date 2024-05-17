@@ -156,4 +156,32 @@ public class PageNavigationController {
         addTrainingView.setSize(frameSize); // set the size of the new window
         addTrainingView.setLocation(frameLocation); // set the location of the new window
     }
+
+    public void navigateToLogin(){
+        // Store the size and location of the current window
+        frameSize = currentFrame.getSize();
+        frameLocation = currentFrame.getLocation();
+
+        // Close the current window
+        currentFrame.dispose();
+
+        // Open the DailyPlan window
+        LoginView loginView = new LoginView();
+        loginView.setSize(frameSize); // set the size of the new window
+        loginView.setLocation(frameLocation); // set the location of the new window
+    }
+
+    public void navigateToRegister(){
+        // Store the size and location of the current window
+        frameSize = currentFrame.getSize();
+        frameLocation = currentFrame.getLocation();
+
+        // Close the current window
+        currentFrame.dispose();
+
+        // Open the DailyPlan window
+        RegisterView registerView = new RegisterView();
+        registerView.setSize(frameSize); // set the size of the new window
+        registerView.setLocation(frameLocation); // set the location of the new window
+    }
 }
