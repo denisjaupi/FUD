@@ -12,6 +12,8 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -35,12 +37,12 @@ public class LoginView extends JFrame {
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         JPanel signInButtonPanel = createSignInButtonPanel();
-        JPanel addButtonPanel = createLoginButtonPanel();
+        JPanel loginButtonPanel = createLoginButtonPanel();
         JPanel contentPanel = createContentPanel();
 
         mainPanel.add(signInButtonPanel, BorderLayout.WEST);
         mainPanel.add(contentPanel, BorderLayout.CENTER);
-        mainPanel.add(addButtonPanel, BorderLayout.EAST);
+        mainPanel.add(loginButtonPanel, BorderLayout.EAST);
 
         return mainPanel;
     }
@@ -63,9 +65,23 @@ public class LoginView extends JFrame {
         // Creare le etichette
         JLabel usernameLabel = new JLabel("Username:");
         JLabel passwordLabel = new JLabel("Password:");
-        JLabel forgotPasswordLabel = new JLabel("Forgot password?");
+
+        ///////////////////////////////////////////////////////
+
+        // Creare un'etichetta per il link "Forgot password?"
+        JLabel forgotPasswordLabel = new JLabel("<html><a href=''>Forgot password?</a></html>");
+        forgotPasswordLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         forgotPasswordLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
+        forgotPasswordLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // inserisci qui il codice da eseguire quando l'utente clicca sulla label
+                System.out.println("Forgot password clicked");
+            }
+        });
+
+        ///////////////////////////////////////////////////////
 
 
         // Creare i campi di testo
