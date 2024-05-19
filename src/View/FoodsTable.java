@@ -10,9 +10,9 @@ import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class RecipesTableView extends JFrame {
+public class FoodsTable extends JFrame {
 
-    public RecipesTableView() {
+    public FoodsTable() {
         setupWindow();
         JPanel mainPanel = createMainPanel();
         add(mainPanel);
@@ -22,6 +22,7 @@ public class RecipesTableView extends JFrame {
     ////////////////////////////////////////////////////////////////
 
     private JPanel createMainPanel() {
+
         JPanel mainPanel = new JPanel(new BorderLayout());
         JPanel backButtonPanel = createButtonPanel();
         JPanel contentPanel = createContentPanel();
@@ -48,7 +49,7 @@ public class RecipesTableView extends JFrame {
         JPanel tablePanel = new JPanel(new BorderLayout());
 
         // Creare un modello per la tabella
-        DefaultTableModel model = new DefaultTableModel(new Object[]{"Name", "Calories", "Proteins", "Carbohydrates", "Fats"}, 0);
+        DefaultTableModel model = new DefaultTableModel(new Object[]{"Name", "Calories (for 100g)", "Proteins", "Carbohydrates", "Fats"}, 0);
 
         // Creare la tabella con il modello
         JTable table = new JTable(model);
@@ -77,6 +78,12 @@ public class RecipesTableView extends JFrame {
             throw new RuntimeException(e);
         }
 
+        /*
+        // Impostare il renderer e l'editor per la colonna del pulsante
+        ButtonRenderer buttonRenderer = new ButtonRenderer();
+        table.getColumn("Add").setCellRenderer(buttonRenderer);
+        table.getColumn("Add").setCellEditor(buttonRenderer);
+        */
 
         // Aggiungere la tabella a uno JScrollPane
         JScrollPane scrollPane = new JScrollPane(table);
@@ -87,7 +94,8 @@ public class RecipesTableView extends JFrame {
     }
 
     private JPanel createTitlePanel() {
-        JLabel label = new JLabel("Recipes Table", SwingConstants.CENTER);
+
+        JLabel label = new JLabel("FUD", SwingConstants.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, 36));
 
         JPanel labelPanel = new JPanel(new FlowLayout());
@@ -98,6 +106,39 @@ public class RecipesTableView extends JFrame {
 
     ////////////////////////////////////////////////////////////////
 
+    /*
+    class ButtonRenderer extends AbstractCellEditor implements TableCellRenderer, TableCellEditor {
+        JButton button;
+
+        public ButtonRenderer() {
+            button = new JButton();
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Aggiungi qui l'azione del pulsante
+                }
+            });
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            button.setText((value == null) ? "" : value.toString());
+            return button;
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            button.setText((value == null) ? "" : value.toString());
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return button.getText();
+        }
+    }
+    */
+
     private JPanel createButtonPanel() {
 
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
@@ -105,10 +146,10 @@ public class RecipesTableView extends JFrame {
         PageNavigationController pageNavigationController = new PageNavigationController(this);
 
         JToggleButton backButton = createButton("Back", buttonGroup, pageNavigationController::navigateToHome);
-        JToggleButton addFoodButton = createButton("New Recipe", buttonGroup, pageNavigationController::navigateToAddRecipe);
+        JToggleButton newFoodButton = createButton("New Food", buttonGroup, pageNavigationController::navigateToAddFood);
 
         buttonPanel.add(backButton);
-        buttonPanel.add(addFoodButton);
+        buttonPanel.add(newFoodButton);
 
         return buttonPanel;
     }
