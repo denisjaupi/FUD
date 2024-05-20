@@ -14,7 +14,6 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
-import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.RingPlot;
 import org.jfree.data.general.DefaultPieDataset;
 
@@ -31,9 +30,9 @@ public class DailyPlan extends JFrame {
     }
 
     private void setupWindow() {
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setSize(1000, 600); // Imposta le dimensioni iniziali della finestra
+        setResizable(false); // Impedisce il ridimensionamento della finestra
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(800, 600));
     }
 
     private JPanel createMainPanel() {
@@ -183,14 +182,34 @@ public class DailyPlan extends JFrame {
 
         //////////////////////////////////////////////////////////////////////////
 
-        JPanel buttonPanel = new JPanel(new BorderLayout());
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
+
+        JLabel dietLabel = new JLabel("Type of diet:");
+        dietLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        dietLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
+        JTextField dietField = new JTextField("Balanced");
+        dietField.setHorizontalAlignment(JTextField.CENTER);
+        dietField.setEditable(false);
+
+        /////////////////////////////////////////////////////////////////////////
+
         JButton macrosDistributionButton = new JButton("Edit Macros Distribution");
-        macrosDistributionButton.setPreferredSize(new Dimension(macrosDistributionButton.getPreferredSize().width, 50)); // Imposta l'altezza a 50
-        macrosDistributionButton.setMinimumSize(new Dimension(macrosDistributionButton.getMinimumSize().width, 50)); // Imposta l'altezza minima a 50
-        buttonPanel.add(macrosDistributionButton, BorderLayout.CENTER);
+        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        macrosDistributionButton.addActionListener(e -> pageNavigationController.navigateToTypeOfDietTable());
+        // macrosDistributionButton.setPreferredSize(new Dimension(macrosDistributionButton.getPreferredSize().width, 50));
+        // macrosDistributionButton.setMinimumSize(new Dimension(macrosDistributionButton.getMinimumSize().width, 50));
+
+        //////////////////////////////////////////////////////////////////////////
+        buttonPanel.add(dietLabel, BorderLayout.WEST);
+        buttonPanel.add(dietField, BorderLayout.CENTER);
+        buttonPanel.add(macrosDistributionButton, BorderLayout.EAST);
+
         gbc.gridy = 3;
         gbc.weighty = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
+        macrosDistributionPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        // macrosDistributionPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
         macrosDistributionPanel.add(buttonPanel, gbc);
 
 
@@ -201,11 +220,14 @@ public class DailyPlan extends JFrame {
         JPanel mealDistributionPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
-        mealDistributionPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 10, 20));
+        // mealDistributionPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.BLACK)); // NON FUNGE
+        mealDistributionPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 
         JLabel label = new JLabel("Meal Distribution", SwingConstants.LEFT);
         label.setFont(new Font("Arial", Font.BOLD, 24));
         label.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+
+
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1;
@@ -216,6 +238,7 @@ public class DailyPlan extends JFrame {
         JPanel mealLabelsPanel = new JPanel();
         mealLabelsPanel.setLayout(new BoxLayout(mealLabelsPanel, BoxLayout.X_AXIS));
 
+        /*
         JTextField carbsOutput = new JTextField(10);
         JTextField proteinsOutput = new JTextField(10);
         JTextField fatsOutput = new JTextField(10);
@@ -256,13 +279,30 @@ public class DailyPlan extends JFrame {
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
         mealDistributionPanel.add(emptyPanel, gbc);
+        */
 
 
-        JPanel buttonPanel = new JPanel(new BorderLayout());
+
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
+
+        JLabel dietLabel = new JLabel("Number of meals:");
+        dietLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        dietLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
+        JComboBox<Integer> mealsComboBox = new JComboBox<>();
+        for (int i = 1; i <= 10; i++) {
+            mealsComboBox.addItem(i);
+        }
+
         JButton macrosDistributionButton = new JButton("Edit Macros Distribution");
-        macrosDistributionButton.setPreferredSize(new Dimension(macrosDistributionButton.getPreferredSize().width, 50)); // Imposta l'altezza a 50
-        macrosDistributionButton.setMinimumSize(new Dimension(macrosDistributionButton.getMinimumSize().width, 50)); // Imposta l'altezza minima a 50
-        buttonPanel.add(macrosDistributionButton, BorderLayout.CENTER);
+        // macrosDistributionButton.setPreferredSize(new Dimension(macrosDistributionButton.getPreferredSize().width, 50));
+        macrosDistributionButton.setMinimumSize(new Dimension(macrosDistributionButton.getMinimumSize().width, 50));
+
+        buttonPanel.add(dietLabel, BorderLayout.WEST);
+        buttonPanel.add(mealsComboBox, BorderLayout.CENTER);
+        buttonPanel.add(macrosDistributionButton, BorderLayout.EAST);
+
+
         gbc.gridy = 3;
         gbc.weighty = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
