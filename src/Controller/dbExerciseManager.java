@@ -5,7 +5,6 @@ import java.sql.*;
 
 public class dbExerciseManager {
 
-
     public static ResultSet getExercise() {
         return Db.result("SELECT name,met, intensity FROM exercise");
     }
@@ -15,7 +14,7 @@ public class dbExerciseManager {
     }
 
     public static ResultSet getFood_withName(String name) {
-        return Db.result("SELECT name,name,met, intensity FROM exercise where name = '" + name + "'");
+        return Db.result("SELECT name, met, intensity FROM exercise where name = '" + name + "'");
     }
 
     public static void add_exercise_fromDb(String name, float met, String intensity){

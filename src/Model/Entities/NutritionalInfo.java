@@ -13,5 +13,19 @@ public class NutritionalInfo {
         this.fats = f;
         this.carbohydrates = car;
     }
+    public double getCalories(){
+        return calories;
+    }
+    public double getProteins(){
+        return proteins;
+    }
+
+    public double getCarbohydrates() {
+        return carbohydrates;
+    }
+
+    public double getFats() {
+        return fats;
+    }
 }
 

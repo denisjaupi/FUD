@@ -1,43 +1,99 @@
 package Model.Entities;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 
 public class Meal {
     private final int id;
-    private int type;
+    private String type;
     private ArrayList<Food> foodList;
-    private ArrayList<Recipe> recipes;
+    private ArrayList<Recipe> recipeList;
     NutritionalInfo info;
+    private  int num_prod_recipe;
+    private  int num_prod_food;
 
 
-    public Meal(int id, int t){
+    public Meal(int id, String t){
         this.id = id;
         type = t;
         foodList= new ArrayList<>();
-        recipes= new ArrayList<>();
+        recipeList = new ArrayList<>();
     }
 
     public int getId() {
         return id;
     }
+
+
     public void addFood(Food f){
         foodList.add(f);
+        updateNum_food(1);
     }
+
+
     public void addRecipe(Recipe r){
-        recipes.add(r);
+        recipeList.add(r);
+        updateNum_recipe(1);
+    }
+
+    public void removeFood(int id){
+        Food foodToRemove = null;
+        for (Food food : foodList) {
+            if (food.getId() == id) {
+                foodToRemove = food;
+                break; // Esci dal ciclo una volta trovato l'elemento
+            }
+        }
+        // Rimuovi il Recipe dalla lista
+        if (foodToRemove != null) {
+            recipeList.remove(foodToRemove);
+            updateNum_food(0);
+        } else {
+            System.out.println("Food non trovato con l'ID specificato.");
+        }
     }
 
 
-    public void removeRecipe(int position){
-        Recipe r=recipes.get(position);
-        recipes.remove(position);
+    private void updateNum_food(int control) {
+        if (control == 1) {
+            num_prod_food = num_prod_food + 1;
+        } else if (control == 0) {
+            num_prod_food = num_prod_food - 1;
+        }
+    }
+    private void updateNum_recipe(int control) {
+        if (control == 1) {
+            num_prod_recipe= num_prod_recipe + 1;
+        } else if (control == 0) {
+            num_prod_recipe = num_prod_recipe - 1;
+        }
     }
 
+    public void removeRecipe(int id) {
+        // Cerca il Recipe con l'ID specificato
+        Recipe recipeToRemove = null;
+        for (Recipe recipe : recipeList) {
+            if (recipe.getId() == id) {
+                recipeToRemove = recipe;
+                break; // Esci dal ciclo una volta trovato l'elemento
+            }
+        }
+        // Rimuovi il Recipe dalla lista
+        if (recipeToRemove != null) {
+            recipeList.remove(recipeToRemove);
+            updateNum_recipe(0);
+        } else {
+            System.out.println("Recipe non trovato con l'ID specificato.");
+        }
+    }
 
-    public void removeFood(int position){
-        Food f=foodList.get(position);
-        foodList.remove(f);
+    public int getNum_prodFood() {
+        return num_prod_food;
+    }
+    public int getNum_prodRecipe() {
+        return num_prod_recipe;
     }
 
 
@@ -46,23 +102,79 @@ public class Meal {
     }
 
 
-    public ArrayList<Recipe> getRecipes(){
-        return recipes;
+    public ArrayList<Recipe> getRecipeList(){
+        return recipeList;
     }
 
+    public void setInfo(NutritionalInfo info) {
+        this.info = info;
+    }
 
     public void calculateTotalCalories(){
-        for(Recipe r:recipes){
+        for(Recipe r: recipeList){
             this.info.calories +=r.info.calories;
             this.info.carbohydrates+= r.info.carbohydrates;
             this.info.fats+=r.info.fats;
             this.info.proteins+=r.info.proteins;
         }
         for(Food f:foodList){
-            this.info.calories +=f.info.calories;
-            this.info.carbohydrates+= f.info.carbohydrates;
-            this.info.fats+=f.info.fats;
-            this.info.proteins+=f.info.proteins;
+            this.info.calories +=f.getNutritionalInfo().calories;
+            this.info.carbohydrates+= f.getNutritionalInfo().carbohydrates;
+            this.info.fats+=f.getNutritionalInfo().fats;
+            this.info.proteins+=f.getNutritionalInfo().proteins;
+        }
+    }
+
+
+    //this method must be used before to create a new meal
+
+    public void calculateTotalCalories_start(ArrayList<Food>  foods, @NotNull ArrayList<Recipe> recipes){
+        for(Recipe r: recipes){
+            this.info.calories +=r.info.calories;
+            this.info.carbohydrates+= r.info.carbohydrates;
+            this.info.fats+=r.info.fats;
+            this.info.proteins+=r.info.proteins;
+        }
+        for(Food f:foods){
+            this.info.calories +=f.getNutritionalInfo().calories;
+            this.info.carbohydrates+= f.getNutritionalInfo().carbohydrates;
+            this.info.fats+=f.getNutritionalInfo().fats;
+            this.info.proteins+=f.getNutritionalInfo().proteins;
+        }
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Meal meal = (Meal) obj;
+        return id == meal.id;
+    }
+
+    public ArrayList<Recipe> getRecipes() {
+        return recipeList;
+    }
+    public ArrayList<Food> getFoods() {
+        return foodList;
+    }
+
+    public void updateQuantity_f(int id_food, int quantity){
+        for(Food f:foodList){
+            if(f.getId()==id_food){
+                f.setQuantity(quantity);
+            }
+        }
+    }
+
+    public void updateRecipe_meal(int id_recipe, String name, String desc){
+        for(Recipe r:recipeList){
+            if(r.getId()==id_recipe){
+                r.setName(name);
+                r.setDesc(desc);
+            }
         }
     }
 }

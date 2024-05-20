@@ -1,12 +1,14 @@
 package Model.Util;
 
 public class CalculatedProfileData {
-    private String bmi;
-    private String waterRequirement;
-    private String bmr;
-    private String caloricIntake;
+    private double bmi;
+    private double waterRequirement;
+    private double bmr;
+    private double caloricIntake;
 
-    public CalculatedProfileData(String bmi, String waterRequirement, String bmr, String caloricIntake) {
+    public CalculatedProfileData(){}
+
+    public CalculatedProfileData(double bmi, double waterRequirement, double bmr, double caloricIntake) {
         this.bmi = bmi;
         this.waterRequirement = waterRequirement;
         this.bmr = bmr;
@@ -14,19 +16,19 @@ public class CalculatedProfileData {
     }
 
     // getters
-    public String getBmi() {
+    public double getBmi() {
         return bmi;
     }
 
-    public String getWaterRequirement() {
+    public double getWaterRequirement() {
         return waterRequirement;
     }
 
-    public String getBmr() {
+    public double getBmr() {
         return bmr;
     }
 
-    public String getCaloricIntake() {
+    public double getCaloricIntake() {
         return caloricIntake;
     }
 }

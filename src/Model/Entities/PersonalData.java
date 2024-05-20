@@ -3,6 +3,7 @@ package Model.Entities;
 import Model.Util.CalculatedProfileData;
 
 public class PersonalData{
+    private int id;
     private double height;
     private double weight;
     private int age;
@@ -10,8 +11,9 @@ public class PersonalData{
     private String activity;  //quante volte ti alleni
     private String goal;
     private CalculatedProfileData calculateProfileData;
+    private int count_meal;
 
-    public PersonalData(double height, double weight, int age, String gender, String activity, String goal){
+    public PersonalData(double height, double weight, int age, String gender, String activity, String goal, int count_meal){
         this.height = height;
         this.weight = weight;
         this.age = age;
@@ -19,8 +21,18 @@ public class PersonalData{
         this.activity = activity;
         this.goal = goal;
         calculateAndProfileData();
+        this.count_meal = count_meal;
+    }
+    public int getCount_meal(){
+        return count_meal;
+    }
+    public int getId(){
+        return id;
     }
 
+    public void setId(int id){
+        this.id = id;
+    }
     public double getHeight(){
         return height;
     }
@@ -69,16 +81,20 @@ public class PersonalData{
         this.goal = goal;
     }
 
+    public void setCount_meal(int count_meal){
+        this.count_meal = count_meal;
+    }
+
     public CalculatedProfileData getCalculatedProfileData(){
         return calculateProfileData;
     }
 
-    private void calculateAndProfileData(){
-        String bmr=String.format("%.3f", calculateBMR());
-        String bmi=String.format("%.3f", calculateBMI());
-        String waterRequirement=String.format("%.3f", calculateWaterRequirement());
-        String caloricIntake=String.format("%.3f", calculateCaloricIntake());
-        calculateProfileData=new CalculatedProfileData(bmi, waterRequirement,bmr, caloricIntake);
+    public void calculateAndProfileData(){
+        double bmr = calculateBMR();
+        double bmi = calculateBMI();
+        double waterRequirement = calculateWaterRequirement();
+        double caloricIntake = calculateCaloricIntake();
+        calculateProfileData = new CalculatedProfileData(bmi, waterRequirement, bmr, caloricIntake);
     }
 
     // Calcolo del BMR usando la formula di Mifflin-St Jeor
