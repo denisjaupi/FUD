@@ -6,7 +6,7 @@ import java.sql.SQLException;
 public class Main {
     public static void main(String[] args) throws SQLException {
         // Create a new Home window
-        new View.Home();
+        new View.LoginView();
         ResultSet rs = dbFoodManager.getFood();
         for (int i = 1; i <= 50; i++){
             rs.absolute(i);

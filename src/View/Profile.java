@@ -37,20 +37,21 @@ public class Profile extends JFrame {
     }
 
     private void setupWindow() {
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setSize(1000, 600); // Imposta le dimensioni iniziali della finestra
+        setResizable(false); // Impedisce il ridimensionamento della finestra
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(800, 600));
     }
 
     private JPanel createMainPanel() {
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
 
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        JPanel logoutButtonPanel = createLogoutButtonPanel();
         JPanel buttonPanel = createButtonPanel();
-        mainPanel.add(buttonPanel);
-
         JPanel contentPanel = createContentPanel();
-        mainPanel.add(contentPanel);
+
+        mainPanel.add(logoutButtonPanel, BorderLayout.EAST);
+        mainPanel.add(contentPanel, BorderLayout.CENTER);
+        mainPanel.add(buttonPanel, BorderLayout.WEST);
 
         return mainPanel;
     }
@@ -59,10 +60,10 @@ public class Profile extends JFrame {
         JPanel buttonPanel = new JPanel(new GridLayout(4, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
 
-        JToggleButton button1 = createButton("Home", buttonGroup);
-        JToggleButton button2 = createButton("Profile", buttonGroup);
-        JToggleButton button3 = createButton("Daily Plan", buttonGroup);
-        JToggleButton button4 = createButton("Daily Tracker", buttonGroup);
+        JToggleButton button1 = createButton("Home", buttonGroup, () -> new PageNavigationController(this).navigateToHome());
+        JToggleButton button2 = createButton("Profile", buttonGroup, () -> new PageNavigationController(this).navigateToProfile());
+        JToggleButton button3 = createButton("Daily Plan", buttonGroup, () -> new PageNavigationController(this).navigateToDailyPlan());
+        JToggleButton button4 = createButton("Daily Tracker", buttonGroup, () -> new PageNavigationController(this).navigateToDailyTracker());
 
         button2.setSelected(true);
 
@@ -74,28 +75,35 @@ public class Profile extends JFrame {
         return buttonPanel;
     }
 
-    private JToggleButton createButton(String title, ButtonGroup buttonGroup) {
+    private JToggleButton createButton(String title, ButtonGroup buttonGroup, Runnable action) {
         JToggleButton button = new JToggleButton(title);
         buttonGroup.add(button);
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
-        button.addActionListener(e -> {
-            switch (title) {
-                case "Home":
-                    pageNavigationController.navigateToHome();
-                    break;
-                case "Profile":
-                    pageNavigationController.navigateToProfile();
-                    break;
-                case "Daily Plan":
-                    pageNavigationController.navigateToDailyPlan();
-                    break;
-                case "Daily Tracker":
-                    pageNavigationController.navigateToDailyTracker();
-                    break;
-            }
-        });
+        if (action != null) {
+            button.addActionListener(e -> action.run());
+        }
         return button;
     }
+
+    ////////////////////////////////////////////////////////////////
+
+    private JPanel createLogoutButtonPanel() {
+
+        JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
+        ButtonGroup buttonGroup = new ButtonGroup();
+        PageNavigationController pageNavigationController = new PageNavigationController(this);
+
+        JToggleButton logoutButton = createButton("Logout", buttonGroup, () -> {
+            // Autentifica l'utente con il database
+
+            // Dopo aver aggiunto il cibo, naviga alla pagina FoodsTable
+            pageNavigationController.navigateToLogin();
+        });
+
+        buttonPanel.add(logoutButton);
+
+        return buttonPanel;
+    }
+
 
     private JPanel createContentPanel() {
         JPanel contentPanel = new JPanel(new BorderLayout());
@@ -104,6 +112,7 @@ public class Profile extends JFrame {
         label.setFont(new Font("Arial", Font.BOLD, 36));
         JPanel labelPanel = new JPanel(new FlowLayout());
         labelPanel.add(label);
+
         contentPanel.add(labelPanel, BorderLayout.NORTH);
 
         JPanel centralPanel = new JPanel();
@@ -235,7 +244,7 @@ public class Profile extends JFrame {
 
         JPanel heightPanel = new JPanel();
         JLabel heightLabel = new JLabel("Height: ");
-        heightField = new JTextField(10);
+        heightField = new JTextField(6);
         JLabel cmLabel = new JLabel("cm");
         heightPanel.add(heightLabel);
         heightPanel.add(heightField);
@@ -244,7 +253,7 @@ public class Profile extends JFrame {
 
         JPanel weightPanel = new JPanel();
         JLabel weightLabel = new JLabel("Weight: ");
-        weightField = new JTextField(10);
+        weightField = new JTextField(6);
         JLabel kgLabel = new JLabel("kg");
         weightPanel.add(weightLabel);
         weightPanel.add(weightField);

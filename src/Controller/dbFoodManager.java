@@ -25,7 +25,7 @@ public class dbFoodManager {
         int generatedKey = dbNutritionalInfoManager.addNutritionalInfo(food.getNutritionalInfo());
         if(generatedKey!=0)
             Db.result("INSERT INTO foods (name, macro) VALUES ('" + food.getName() + "', " + generatedKey + ")");
-        }
+
 
     public static void remove_food_withId(int id) {
         int macro=0;
