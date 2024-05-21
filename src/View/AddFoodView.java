@@ -2,6 +2,8 @@ package View;
 
 import Controller.PageNavigationController;
 import Controller.dbFoodManager;
+import Model.Entities.Food;
+import Model.Entities.NutritionalInfo;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -23,6 +25,8 @@ public class AddFoodView extends JFrame {
     private JTextField proteinsField;
     private JTextField carbohydratesField;
     private JTextField fatsField;
+    private Food food;
+    private NutritionalInfo nutritionalInfo;
 
     public AddFoodView() {
         setupWindow();
@@ -166,7 +170,10 @@ public class AddFoodView extends JFrame {
             float carbohydrates = Float.parseFloat(carbohydratesField.getText());
             float fats = Float.parseFloat(fatsField.getText());
 
-            dbFoodManager.add_food_Db(name, calories, proteins, carbohydrates, fats);
+            food = new Food(name, new NutritionalInfo(calories, proteins, carbohydrates, fats));
+
+            dbFoodManager.addFood_Db(food);
+            food.setId(dbFoodManager.selectId(name));
 
             // Dopo aver aggiunto il cibo, naviga alla pagina FoodsTable
             pageNavigationController.navigateToFoodTable();

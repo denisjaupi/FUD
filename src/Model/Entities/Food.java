@@ -6,8 +6,7 @@ public class Food {
     private  NutritionalInfo info;
     private int quantity;
 
-    public Food(int id,  String n, NutritionalInfo i) {
-        this.id = id;
+    public Food(String n, NutritionalInfo i) {
         this.name = n;
         this.info=i; //Nutritional info for 100g
     }
@@ -25,6 +24,9 @@ public class Food {
     }
     public String getName(){
         return name;
+    }
+    public void setId(int id){
+        this.id=id;
     }
 
     public NutritionalInfo countNutritionalInfo(NutritionalInfo oldI){

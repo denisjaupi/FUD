@@ -56,7 +56,7 @@ public class Recipe {
     }
 
     //this method must be used before to create a new recipe
-    public void countNutritionalInfo_start(@org.jetbrains.annotations.NotNull ArrayList<Food> ingredients) {
+    public void countNutritionalInfo_start(ArrayList<Food> ingredients) {
         for (Food f : ingredients) {
             this.info.calories+= f.getNutritionalInfo().calories;
             this.info.carbohydrates+= f.getNutritionalInfo().carbohydrates;

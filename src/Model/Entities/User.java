@@ -5,17 +5,16 @@ public class User {
     private String email;
     private String password;
     private String userName;
-    private PersonalData pd;
+    private PersonalData pd = new PersonalData();
     private RecipeList recipe;
     private DailyCount dailyCount;
 
     public User() {}
-    public User(int id, String email, String password, String userName, PersonalData pd) {
-        this.id = id;
+
+    public User(String email, String password, String userName) {
         this.email = email;
         this.password = password;
         this.userName = userName;
-        this.pd = pd;
         dailyCount= new DailyCount(this.userName);
         recipe= new RecipeList(this.userName);
     }

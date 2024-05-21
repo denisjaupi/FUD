@@ -33,14 +33,21 @@ public class dbDietsManager {
 
     public void select() {
         try {
-            String query = "SELECT * FROM diets WHERE id_user = " + user.getId();
-            ResultSet rs = Db.result(query);
-            if (rs.next()) {
-                do {
-                    int id_meal = rs.getInt("meal");
-                    Meal m = dbM.select(id_meal, rs.getString("type"));
-                    user.getDailyCount().addMeal(m);
-                } while (rs.next());
+            String query = "SELECT COUNT (*) FROM activities WHERE id_user = " + user.getId();
+            ResultSet rissa =Db.result(query);
+            if(rissa.next()) {
+                int countAzz = rissa.getInt(1);
+                if (countAzz > 0) {
+                    query = "SELECT * FROM diets WHERE id_user = " + user.getId();
+                    ResultSet rs = Db.result(query);
+                    if (rs.next()) {
+                        do {
+                            int id_meal = rs.getInt("meal");
+                            Meal m = dbM.select(id_meal, rs.getString("type"));
+                            user.getDailyCount().addMeal(m);
+                        } while (rs.next());
+                    }
+                }
             }
         }catch (SQLException e){
             System.err.println("Errore durante l'esecuzione della query nella select_diets: " + e.getMessage());

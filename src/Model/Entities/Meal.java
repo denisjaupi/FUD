@@ -1,6 +1,6 @@
 package Model.Entities;
 
-import org.jetbrains.annotations.NotNull;
+
 
 import java.util.ArrayList;
 
@@ -128,7 +128,7 @@ public class Meal {
 
     //this method must be used before to create a new meal
 
-    public void calculateTotalCalories_start(ArrayList<Food>  foods, @NotNull ArrayList<Recipe> recipes){
+    public void calculateTotalCalories_start(ArrayList<Food>  foods, ArrayList<Recipe> recipes){
         for(Recipe r: recipes){
             this.info.calories +=r.info.calories;
             this.info.carbohydrates+= r.info.carbohydrates;

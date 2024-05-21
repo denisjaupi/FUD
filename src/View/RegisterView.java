@@ -1,7 +1,9 @@
 package View;
 
+import Controller.Engine;
 import Controller.PageNavigationController;
 import Controller.dbFoodManager;
+import Model.Entities.User;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -21,13 +23,17 @@ public class RegisterView extends JFrame {
     private JTextField usernameField;
     private JTextField passwordField;
     private JTextField validatePasswordField;
+    private JTextField emailField;
+    private User user;
+    private Engine registerEngine;
 
 
-    public RegisterView() {
+    public RegisterView(Engine registerEngine) {
         setupWindow();
         JPanel mainPanel = createMainPanel();
         add(mainPanel);
         setVisible(true);
+        this.registerEngine = registerEngine;
     }
 
     ////////////////////////////////////////////////////////////////
@@ -59,16 +65,18 @@ public class RegisterView extends JFrame {
     ////////////////////////////////////////////////////////////////
 
     private JPanel createAddUserPanel() {
-        JPanel addTablePanel = new JPanel(new GridLayout(12, 1));
+        JPanel addTablePanel = new JPanel(new GridLayout(10, 1));
 
         // Creare le etichette
         JLabel usernameLabel = new JLabel("Username:");
+        JLabel emailLabel = new JLabel("Email:");
         JLabel passwordLabel = new JLabel("Password:");
         JLabel validatePasswordLabel = new JLabel("Confirm Password:");
 
 
         // Creare i campi di testo
         usernameField = new JTextField();
+        emailField = new JTextField();
         passwordField = new JTextField();
         validatePasswordField = new JTextField();
 
@@ -76,6 +84,8 @@ public class RegisterView extends JFrame {
         // Aggiungere le etichette e i campi di testo al pannello
         addTablePanel.add(usernameLabel);
         addTablePanel.add(usernameField);
+        addTablePanel.add(emailLabel);
+        addTablePanel.add(emailField);
         addTablePanel.add(passwordLabel);
         addTablePanel.add(passwordField);
         addTablePanel.add(validatePasswordLabel);
@@ -110,6 +120,28 @@ public class RegisterView extends JFrame {
 
         JToggleButton addFoodButton = createButton("Sign In", buttonGroup, () -> {
             // Aggiungi l'utente al database
+            String username = usernameField.getText();
+            String email = emailField.getText();
+            String password = passwordField.getText();
+            String validatePassword = validatePasswordField.getText();
+
+            user = new User(email, password, username);
+
+            if (!password.equals(validatePassword)) {
+                JOptionPane.showMessageDialog(this, "Passwords do not match", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (registerEngine.register(user)) {
+                JOptionPane.showMessageDialog(this, "User registered successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "User already exists", "Error", JOptionPane.ERROR_MESSAGE);
+            }
 
             // Dopo aver aggiunto il cibo, naviga alla pagina FoodsTable
             pageNavigationController.navigateToLogin();

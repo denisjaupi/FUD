@@ -7,11 +7,15 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.sql.SQLException;
 import java.util.stream.IntStream;
 
+import Controller.Engine;
 import Controller.PageNavigationController;
+import Controller.dbUserManager;
 import Model.Util.CalculatedProfileData;
 import Model.Entities.PersonalData;
+
 
 public class Profile extends JFrame {
 
@@ -27,13 +31,15 @@ public class Profile extends JFrame {
     private JTextField waterRequirementField;
     private JTextField caloricIntakeField;
 
+    private Engine engine;
 
-    public Profile() {
+    public Profile(Engine engine) {
         setupWindow();
         JPanel mainPanel = createMainPanel();
         add(mainPanel);
         setVisible(true);
         addDocumentListeners();
+        this.engine = engine;
     }
 
     private void setupWindow() {
@@ -91,6 +97,7 @@ public class Profile extends JFrame {
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
         PageNavigationController pageNavigationController = new PageNavigationController(this);
+        pageNavigationController.setEngine(engine);
 
         JToggleButton logoutButton = createButton("Logout", buttonGroup, () -> {
             // Autentifica l'utente con il database
@@ -99,7 +106,18 @@ public class Profile extends JFrame {
             pageNavigationController.navigateToLogin();
         });
 
+        JToggleButton deleteButton = createButton("Delete Account", buttonGroup, () -> {
+            try {
+                dbUserManager.deleteUser(dbUserManager.getUser().getId());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+            pageNavigationController.navigateToLogin();
+        });
+
         buttonPanel.add(logoutButton);
+        buttonPanel.add(deleteButton);
 
         return buttonPanel;
     }
@@ -190,10 +208,10 @@ public class Profile extends JFrame {
             CalculatedProfileData calculatedProfileData = personalData.getCalculatedProfileData();
 
             // Assegna i valori calcolati ai campi di testo corrispondenti
-            bmrField.setText(calculatedProfileData.getBmr());
-            bmiField.setText(calculatedProfileData.getBmi());
-            waterRequirementField.setText(calculatedProfileData.getWaterRequirement());
-            caloricIntakeField.setText(calculatedProfileData.getCaloricIntake());
+            bmrField.setText(String.valueOf(calculatedProfileData.getBmr()));
+            bmiField.setText(String.valueOf(calculatedProfileData.getBmi()));
+            waterRequirementField.setText(String.valueOf(calculatedProfileData.getWaterRequirement()));
+            caloricIntakeField.setText(String.valueOf(calculatedProfileData.getCaloricIntake()));
 
         }
     }

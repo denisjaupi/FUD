@@ -1,5 +1,6 @@
 package View;
 
+import Controller.Engine;
 import Controller.PageNavigationController;
 import Controller.dbFoodManager;
 
@@ -17,18 +18,22 @@ import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+
+
 public class LoginView extends JFrame {
 
     // Dichiaro i campi di testo come variabili di istanza
-    private JTextField usernameField;
+    private JTextField emailField;
     private JTextField passwordField;
+    private Engine engine = new Engine();
 
 
-    public LoginView() {
+    public LoginView(Engine engine) {
         setupWindow();
         JPanel mainPanel = createMainPanel();
         add(mainPanel);
         setVisible(true);
+        this.engine = engine;
     }
 
     ////////////////////////////////////////////////////////////////
@@ -63,7 +68,7 @@ public class LoginView extends JFrame {
         JPanel addTablePanel = new JPanel(new GridLayout(12, 1));
 
         // Creare le etichette
-        JLabel usernameLabel = new JLabel("Username:");
+        JLabel emailLabel = new JLabel("Email:");
         JLabel passwordLabel = new JLabel("Password:");
 
         ///////////////////////////////////////////////////////
@@ -85,12 +90,12 @@ public class LoginView extends JFrame {
 
 
         // Creare i campi di testo
-        usernameField = new JTextField();
+        emailField = new JTextField();
         passwordField = new JTextField();
 
         // Aggiungere le etichette e i campi di testo al pannello
-        addTablePanel.add(usernameLabel);
-        addTablePanel.add(usernameField);
+        addTablePanel.add(emailLabel);
+        addTablePanel.add(emailField);
         addTablePanel.add(passwordLabel);
         addTablePanel.add(passwordField);
         addTablePanel.add(forgotPasswordLabel);
@@ -121,9 +126,18 @@ public class LoginView extends JFrame {
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
         PageNavigationController pageNavigationController = new PageNavigationController(this);
+        pageNavigationController.setEngine(engine);
 
         JToggleButton loginButton = createButton("Login", buttonGroup, () -> {
-            // Autentifica l'utente con il database
+            // Esegui il login
+            String email = emailField.getText();
+            String password = passwordField.getText();
+
+            if (engine.login(email, password)) {
+                System.out.println("Login effettuato con successo");
+            } else {
+                System.out.println("Credenziali non valide");
+            }
 
             // Dopo aver aggiunto il cibo, naviga alla pagina FoodsTable
             pageNavigationController.navigateToHome();
@@ -139,6 +153,7 @@ public class LoginView extends JFrame {
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
         PageNavigationController pageNavigationController = new PageNavigationController(this);
+        pageNavigationController.setEngine(engine);
 
         JToggleButton signInButton = createButton("Sign In", buttonGroup, pageNavigationController::navigateToRegister);
 

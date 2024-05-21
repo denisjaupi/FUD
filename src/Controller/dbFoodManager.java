@@ -21,11 +21,26 @@ public class dbFoodManager {
         return Db.result("SELECT name,calories, proteins, carbohydrates, fats FROM foods F left join nutritionalinfo N on( F.macro=N.id_macro) where name = '" + name + "'");
     }
 
-    public static void addFood_Db(Food food){
+    public static void addFood_Db(Food food) {
         int generatedKey = dbNutritionalInfoManager.addNutritionalInfo(food.getNutritionalInfo());
-        if(generatedKey!=0)
+        if (generatedKey != 0)
             Db.result("INSERT INTO foods (name, macro) VALUES ('" + food.getName() + "', " + generatedKey + ")");
 
+    }
+
+    public static int selectId(String name) {
+        try {
+            String query = "select id_food from foods where name='" + name + "'";
+            ResultSet rs = Db.result(query);
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Errore durante la selezione dell'id del cibo");
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     public static void remove_food_withId(int id) {
         int macro=0;
@@ -83,7 +98,8 @@ public class dbFoodManager {
         ResultSet rs3 = Db.result(query1);
         NutritionalInfo macro= new NutritionalInfo(rs3.getDouble("calories"), rs3.getDouble("proteins"), rs3.getDouble("fats"), rs3.getDouble("carbohydrates"));
         ;
-        Food f= new Food(rs.getInt("id_food"), name_food, macro);
+        Food f= new Food(name_food, macro);
+        f.setId(rs.getInt("id_food"));
         f.setQuantity(rs.getInt("quantity"));
         return f;
     }

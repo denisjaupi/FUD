@@ -13,11 +13,12 @@ public class dbMealManager {
 
 
     public dbMealManager() {
-        dailyCount = user.getDailyCount();
+
     }
 
     public void setUser(User u){
         user = u;
+        dailyCount = user.getDailyCount();
     };
 
 

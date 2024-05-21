@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class dbUserManager {
-    private static User user;
+    private static User user = new User();
     private PersonalData pd;
     private dbPersonalDataManager dbPM = new dbPersonalDataManager();
 
@@ -29,10 +29,9 @@ public class dbUserManager {
                 user.setUserName(rs.getString("username"));
                 user.setEmail(rs.getString("email"));
                 user.setPassword(rs.getString("psw"));
-                query = "select count(*) from personaldata where id_info=" + rs.getInt("id_info");
-                Db.result(query);
-                if (Db.result(query).getInt(0) == 1) {
-                    dbPM.selectPersonalData(rs.getInt("id_info"));
+                int idInfo = rs.getInt("id_info");
+                if(!rs.wasNull()) {
+                    dbPM.selectPersonalData(idInfo);
                 }
             }
         }catch(SQLException e){
@@ -88,13 +87,21 @@ public class dbUserManager {
 
     public static boolean checkCredentials(String  email, String password) throws SQLException {
         String query = "SELECT Count(*) FROM users WHERE email = '" + email + "' AND psw = '" + password + "'";
-        ResultSet rs= Db.result(query) ;
-        int count=rs.getInt(0);
-        if(count==1){
-            return true;
-        }else{
+        ResultSet rs= Db.result(query);
+        if(rs.next()){
+            int count=rs.getInt(1);
+            if(count==1){
+                return true;
+            }else{
+                return false;
+            }
+        } else {
             return false;
         }
+    }
+
+    public static User getUser() {
+        return user;
     }
 
 }

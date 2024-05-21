@@ -19,24 +19,31 @@ public class dbActivitiesManager {
     }
 
     public  void select() throws SQLException {
-
-        String query = "SELECT * FROM activities WHERE id_user = " + user.getId();
-        ResultSet rs=Db.result(query);
-        if(rs.next()){
-            do{
-                int id_exercise = rs.getInt("id_exercise");
-                float calories = rs.getFloat("calories");
-                float time = rs.getFloat("time");
-                query="select * from exercises where id_exercise="+id_exercise;
-                rs=Db.result(query);
+        String query = "SELECT COUNT (*) FROM activities WHERE id_user = " + user.getId();
+        ResultSet rissa =Db.result(query);
+        if(rissa.next()) {
+            int countAzz = rissa.getInt(1);
+            if(countAzz > 0) {
+                query = "SELECT * FROM activities WHERE id_user = " + user.getId();
+                ResultSet rs=Db.result(query);
                 if(rs.next()) {
-                    e = new Exercise(id_exercise, rs.getString("name"), rs.getDouble("met"));
-                    e.setCalories(calories);
-                    e.setIntensity(rs.getString("intensity"));
-                    e.setTime(time);
-                    dailyCount.addExercise(e);
+                    do{
+                        int id_exercise = rs.getInt("id_exercise");
+                        float calories = rs.getFloat("calories");
+                        float time = rs.getFloat("time");
+                        query="select * from exercises where id_exercise="+id_exercise;
+                        rs=Db.result(query);
+                        if(rs.next()) {
+                            e = new Exercise(id_exercise, rs.getString("name"), rs.getDouble("met"));
+                            e.setCalories(calories);
+                            e.setIntensity(rs.getString("intensity"));
+                            e.setTime(time);
+                            dailyCount.addExercise(e);
+                        }
+                    } while(rs.next());
                 }
-            }while(rs.next());
+
+            }
         }
     }
 

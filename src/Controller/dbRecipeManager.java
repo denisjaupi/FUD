@@ -16,13 +16,14 @@ public class dbRecipeManager {
 
 
     public dbRecipeManager() {
-        recipeList = user.getRecipe();
-        dailyCount= user.getDailyCount();
-        meal= dailyCount.getMeals();
     }
 
     public void setUser(User u) {
-        user=u;
+        user = u;
+        recipeList = user.getRecipe();
+        dailyCount= user.getDailyCount();
+        if(dailyCount!=null)
+            meal= dailyCount.getMeals();
     }
 
 

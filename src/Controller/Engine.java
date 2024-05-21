@@ -22,19 +22,16 @@ public class Engine {
 
 
     public Engine() {
-        dbActiv=new dbActivitiesManager();
-        dbEM=new dbExerciseManager();
-        dbIM=new dbIngredientsManager();
-        dbFMM=new dbFoodsMealManager();
-        dbRMM=new dbRecipeMealManager();
-        dbRM=new dbRecipeManager();
-        dbDM=new dbDietsManager();
-        dbMM=new dbMealManager();
         dbFM=new dbFoodManager();
         dbNIM=new dbNutritionalInfoManager();
         dbCPDM=new dbCalculateProfileDataManager();
         dbUM=new dbUserManager();
         dbPDM=new dbPersonalDataManager();
+        dbEM=new dbExerciseManager();
+        dbActiv=new dbActivitiesManager();
+        dbRM=new dbRecipeManager();
+        dbMM=new dbMealManager();
+        dbDM=new dbDietsManager();
 
     }
 
@@ -59,6 +56,7 @@ public class Engine {
                 dbPDM.setUser(user);
 
                 dbUM.selectData(email);
+                user = dbUM.getUser();
 
                 dbActiv.setUser(user);
                 dbActiv.select();
@@ -78,5 +76,6 @@ public class Engine {
             return false;
         }
     }
+
 
 }

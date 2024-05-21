@@ -8,13 +8,21 @@ import java.awt.*;
 public class PageNavigationController {
     private JFrame currentFrame;
     private Dimension frameSize;
-    private Point frameLocation;;
+    private Point frameLocation;
+    public Engine engine;
+
+    public void setEngine(Engine engine){
+        this.engine = engine;
+    }
+
+    public Engine getEngine(){
+        return engine;
+    }
 
     public PageNavigationController(JFrame currentFrame) {
         this.currentFrame = currentFrame;
         this.frameSize = currentFrame.getSize(); // get the size of the current frame
         this.frameLocation = currentFrame.getLocation(); // get the location of the current frame
-
     }
 
     public void navigateToProfile() {
@@ -26,7 +34,7 @@ public class PageNavigationController {
         currentFrame.dispose();
 
         // Open the Profile window
-        Profile profile = new Profile();
+        Profile profile = new Profile(engine);
         profile.setSize(frameSize); // set the size of the new window
         profile.setLocation(frameLocation); // set the location of the new window
     }
@@ -166,7 +174,7 @@ public class PageNavigationController {
         currentFrame.dispose();
 
         // Open the DailyPlan window
-        LoginView loginView = new LoginView();
+        LoginView loginView = new LoginView(engine);
         loginView.setSize(frameSize); // set the size of the new window
         loginView.setLocation(frameLocation); // set the location of the new window
     }
@@ -180,7 +188,7 @@ public class PageNavigationController {
         currentFrame.dispose();
 
         // Open the DailyPlan window
-        RegisterView registerView = new RegisterView();
+        RegisterView registerView = new RegisterView(engine);
         registerView.setSize(frameSize); // set the size of the new window
         registerView.setLocation(frameLocation); // set the location of the new window
     }

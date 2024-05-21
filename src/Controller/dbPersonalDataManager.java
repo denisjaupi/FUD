@@ -21,7 +21,8 @@ public class dbPersonalDataManager {
         String query="insert into personaldata (height, weight, gender, age, activity, goals, meal_count) values("+height+", "+weight+","+gender+","+age+","+activity+","+goals+","+meal_count+")";
         Db.result(query);
         ResultSet rs = Db.result("SELECT LAST_INSERT_ID()");
-        pd=new PersonalData(height, weight, age, gender, activity, goals, meal_count);
+        pd=new PersonalData(height, weight, age, gender, activity, goals);
+        pd.setMealCount(meal_count);
         pd.setId(rs.getInt(1));
         CalculatedProfileData cpd =pd.getCalculatedProfileData();
         dbCalculateProfileDataManager.addCalculateProfileData(cpd.getBmi(), cpd.getWaterRequirement(), cpd.getBmr(), cpd.getCaloricIntake(), pd.getId());
@@ -57,7 +58,8 @@ public class dbPersonalDataManager {
         String query = "SELECT * FROM personaldata WHERE id_info = " + id;
         ResultSet rs = Db.result(query);
         if (rs.next()) {
-            pd = new PersonalData(rs.getDouble("height"), rs.getDouble("weight"), rs.getInt("age"), rs.getString("gender"), rs.getString("activity"), rs.getString("goals"), rs.getInt("meal_count"));
+            pd = new PersonalData(rs.getDouble("height"), rs.getDouble("weight"), rs.getInt("age"), rs.getString("gender"), rs.getString("activity"), rs.getString("goals"));
+            pd.setMealCount(rs.getInt("meal_count"));
             pd.setId(rs.getInt("id_info"));
             user.setPersonalData(pd);
         }

@@ -10,7 +10,7 @@ import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class FoodsTable extends JFrame {
+public class FoodsTable extends JFrame{
 
     public FoodsTable() {
         setupWindow();
