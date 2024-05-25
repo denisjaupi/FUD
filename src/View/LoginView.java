@@ -134,16 +134,20 @@ public class LoginView extends JFrame {
             String email = emailField.getText();
             String password = passwordField.getText();
 
-            if (engine.login(email, password)) {
+            if (email.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (!engine.login(email, password)) {
+                System.out.println("Credenziali non valide");
+                JOptionPane.showMessageDialog(this, "Invalid credentials", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
                 System.out.println("Login effettuato con successo");
                 pageNavigationController.setEngine(engine);
                 pageNavigationController.navigateToHome();
-            } else {
-                System.out.println("Credenziali non valide");
             }
 
-
         });
+
+        loginButton.setSelected(false);
 
         buttonPanel.add(loginButton);
 

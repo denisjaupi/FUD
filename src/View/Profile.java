@@ -27,7 +27,7 @@ public class Profile extends JFrame {
     private JComboBox<String> genderComboBox = new JComboBox<>();
     private JComboBox<String> activityLevelComboBox = new JComboBox<>();
     private JComboBox<String> goalComboBox = new JComboBox<>();
-    private final JTextField mealCountField = new JTextField(6);
+    private final JTextField mealCountField = new JTextField(4);
 
     private JTextField bmrField;
     private JTextField bmiField;
@@ -125,20 +125,26 @@ public class Profile extends JFrame {
         pageNavigationController.setEngine(engine);
 
         JToggleButton logoutButton = createButton("Logout", buttonGroup, () -> {
-            // Autentifica l'utente con il database
-            engine.logout();
-            // Dopo aver aggiunto il cibo, naviga alla pagina FoodsTable
-            pageNavigationController.navigateToLogin();
+            int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (response == JOptionPane.YES_OPTION) {
+                // Autentifica l'utente con il database
+                engine.logout();
+                // Dopo aver aggiunto il cibo, naviga alla pagina FoodsTable
+                pageNavigationController.navigateToLogin();
+            }
         });
 
         JToggleButton deleteButton = createButton("Delete Account", buttonGroup, () -> {
-            try {
-                dbUserManager.deleteUser(dbUserManager.getUser().getId());
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete your account?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (response == JOptionPane.YES_OPTION) {
+                try {
+                    dbUserManager.deleteUser(dbUserManager.getUser().getId());
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
 
-            pageNavigationController.navigateToLogin();
+                pageNavigationController.navigateToLogin();
+            }
         });
 
         buttonPanel.add(logoutButton);
@@ -146,7 +152,6 @@ public class Profile extends JFrame {
 
         return buttonPanel;
     }
-
 
     private JPanel createContentPanel() {
         JPanel contentPanel = new JPanel(new BorderLayout());
@@ -259,6 +264,7 @@ public class Profile extends JFrame {
         JPanel rowPanel = new JPanel(new BorderLayout());
         JLabel label = new JLabel(labelText);
         JTextField textField = new JTextField();
+        textField.setFont(new Font("Arial", Font.PLAIN, 30));
         textField.setEditable(false);
         rowPanel.add(label, BorderLayout.NORTH);
         rowPanel.add(textField, BorderLayout.CENTER);
@@ -283,23 +289,25 @@ public class Profile extends JFrame {
     }
 
     private void createInputPanel(JPanel contentPanel) {
-        JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel inputPanel = new JPanel();
         inputPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         // Aggiungi i pannelli esistenti
         JPanel heightPanel = new JPanel();
+        heightPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
         JLabel heightLabel = new JLabel("Height: ");
         JLabel cmLabel = new JLabel("cm");
-        heightField.setPreferredSize(new Dimension(100, 20)); // Imposta la dimensione preferita del campo di testo
+        heightField.setPreferredSize(new Dimension(80, 20)); // Imposta la dimensione preferita del campo di testo
         heightPanel.add(heightLabel);
         heightPanel.add(heightField);
         heightPanel.add(cmLabel);
         inputPanel.add(heightPanel);
 
         JPanel weightPanel = new JPanel();
+        weightPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
         JLabel weightLabel = new JLabel("Weight: ");
         JLabel kgLabel = new JLabel("kg");
-        weightField.setPreferredSize(new Dimension(100, 20)); // Imposta la dimensione preferita del campo di testo
+        weightField.setPreferredSize(new Dimension(80, 20)); // Imposta la dimensione preferita del campo di testo
         weightPanel.add(weightLabel);
         weightPanel.add(weightField);
         weightPanel.add(kgLabel);
@@ -307,6 +315,7 @@ public class Profile extends JFrame {
 
         // Aggiungi i pannelli per age e gender
         JPanel agePanel = new JPanel();
+        agePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
         JLabel ageLabel = new JLabel("Age: ");
         Integer[] ages = IntStream.rangeClosed(13, 99).boxed().toArray(Integer[]::new);
         ageComboBox = new JComboBox<>(ages);
@@ -315,6 +324,7 @@ public class Profile extends JFrame {
         inputPanel.add(agePanel);
 
         JPanel genderPanel = new JPanel();
+        genderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
         JLabel genderLabel = new JLabel("Gender: ");
         genderComboBox = new JComboBox<>(new String[]{"M", "F"});
         genderPanel.add(genderLabel);
@@ -358,7 +368,7 @@ public class Profile extends JFrame {
         JPanel selectionPanel = new JPanel(new BorderLayout());
         selectionPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        JPanel inputPanel = new JPanel(new GridLayout(1, 3)); // 1 row, 3 columns
+        JPanel inputPanel = new JPanel();
 
         JPanel activityLevelPanel = new JPanel();
         JLabel activityLevelLabel = new JLabel("Activity Level: ");

@@ -118,7 +118,7 @@ public class RegisterView extends JFrame {
         ButtonGroup buttonGroup = new ButtonGroup();
         PageNavigationController pageNavigationController = new PageNavigationController(this);
 
-        JToggleButton addFoodButton = createButton("Sign In", buttonGroup, () -> {
+        JToggleButton addUserButton = createButton("Sign In", buttonGroup, () -> {
             // Aggiungi l'utente al database
             String username = usernameField.getText();
             String email = emailField.getText();
@@ -147,7 +147,9 @@ public class RegisterView extends JFrame {
             pageNavigationController.navigateToLogin();
         });
 
-        buttonPanel.add(addFoodButton);
+        addUserButton.setSelected(false);
+
+        buttonPanel.add(addUserButton);
 
         return buttonPanel;
     }
