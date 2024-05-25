@@ -30,7 +30,7 @@ public class dbUserManager {
                 user.setEmail(rs.getString("email"));
                 user.setPassword(rs.getString("psw"));
                 int idInfo = rs.getInt("id_info");
-                if(!rs.wasNull()) {
+                if(idInfo!=0) {
                     dbPM.selectPersonalData(idInfo);
                 }
             }
@@ -40,27 +40,40 @@ public class dbUserManager {
     }
 
     public static void deleteUser(int id) throws SQLException {
+        int id_info=0;
         dbActivitiesManager.deleteActivities_withUser(id);
         String query="select id_info from users where id_user=" +id;
         ResultSet id_i=Db.result(query);
-        int id_info=id_i.getInt(0);
-        dbCalculateProfileDataManager.deleteCalculateProfileData(id_info);
-        String query1;
-        query="select meal from diets where id_user="+id;
-        while(Db.result(query).next()){
-            dbMealManager.deleteMeal_db(Db.result(query).getInt(0));
-        }
-        dbDietsManager.deleteAllMeals(id);
+        if(id_i.next()) {
+            id_info = id_i.getInt(1);
+            if (!id_i.wasNull()) {
+                dbCalculateProfileDataManager.deleteCalculateProfileData(id_info);
+            }
+            query = "SELECT COUNT (*) FROM diets WHERE id_user = " + id;
+            ResultSet ris = Db.result(query);
+            if (ris.next()) {
+                int count = ris.getInt(1);
+                if (count > 0) {
+                    query = "select meal from diets where id_user=" + id;
+                    while (Db.result(query).next()) {
+                        dbMealManager.deleteMeal_db(Db.result(query).getInt(0));
+                    }
+                    dbDietsManager.deleteAllMeals(id);
 
-        query="Select id_recipe from recipes where id_user="+id;
-        while(Db.result(query).next()){
-            dbRecipeManager.removeRecipe_withId(Db.result(query).getInt(0));
+                    query = "Select id_recipe from recipes where id_user=" + id;
+                    while (Db.result(query).next()) {
+                        dbRecipeManager.removeRecipe_withId(Db.result(query).getInt(0));
+                    }
+                }
+            }
+
         }
-        query1="select id_info from users where id_user="+id;
-        dbPersonalDataManager.deletePersonalData(Db.result(query1).getInt(0));
 
         query = "DELETE FROM users WHERE id_user = " + id;
         Db.result(query);
+        if (!id_i.wasNull()) {
+            dbPersonalDataManager.deletePersonalData(id_info);
+        }
     }
 
 

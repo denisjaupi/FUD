@@ -9,7 +9,7 @@ public class PageNavigationController {
     private JFrame currentFrame;
     private Dimension frameSize;
     private Point frameLocation;
-    public Engine engine;
+    public Engine engine = new Engine();
 
     public void setEngine(Engine engine){
         this.engine = engine;
@@ -48,7 +48,7 @@ public class PageNavigationController {
         currentFrame.dispose();
 
         // Open the Home window
-        Home home = new Home();
+        Home home = new Home(engine);
         home.setSize(frameSize); // set the size of the new window
         home.setLocation(frameLocation); // set the location of the new window
     }
@@ -62,7 +62,7 @@ public class PageNavigationController {
         currentFrame.dispose();
 
         // Open the DailyTracker window
-        DailyTracker dailyTracker = new DailyTracker();
+        DailyTracker dailyTracker = new DailyTracker(engine);
         dailyTracker.setSize(frameSize); // set the size of the new window
         dailyTracker.setLocation(frameLocation); // set the location of the new window
     }
@@ -76,7 +76,7 @@ public class PageNavigationController {
         currentFrame.dispose();
 
         // Open the DailyPlan window
-        DailyPlan dailyPlan = new DailyPlan();
+        DailyPlan dailyPlan = new DailyPlan(engine);
         dailyPlan.setSize(frameSize); // set the size of the new window
         dailyPlan.setLocation(frameLocation); // set the location of the new window
     }
@@ -132,7 +132,7 @@ public class PageNavigationController {
         currentFrame.dispose();
 
         // Open the DailyPlan window
-        AddFoodView addFoodView = new AddFoodView();
+        AddFoodView addFoodView = new AddFoodView(engine);
         addFoodView.setSize(frameSize); // set the size of the new window
         addFoodView.setLocation(frameLocation); // set the location of the new window
     }

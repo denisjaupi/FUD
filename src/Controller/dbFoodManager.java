@@ -10,7 +10,7 @@ public class dbFoodManager {
 
 
     public static ResultSet getFood() {
-        return Db.result("SELECT name,calories, proteins, carbohydrates, fats FROM foods F left join nutritionalinfo N on( F.macro=N.id_macro)");
+        return Db.result("SELECT name,calories, proteins, carbohydrates, fats FROM foods F left join nutritionalinfo N on( F.macro=N.id_macro) ORDER BY name ASC");
     }
 
     public static ResultSet getFood_withId(int id) {

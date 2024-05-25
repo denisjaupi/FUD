@@ -8,38 +8,62 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.stream.IntStream;
 
 import Controller.Engine;
 import Controller.PageNavigationController;
 import Controller.dbUserManager;
+import Model.Entities.User;
 import Model.Util.CalculatedProfileData;
 import Model.Entities.PersonalData;
 
 
 public class Profile extends JFrame {
 
-    private JTextField heightField;
-    private JTextField weightField;
-    private JComboBox<Integer> ageComboBox;
-    private JComboBox<String> genderComboBox;
-    private JComboBox<String> activityLevelComboBox;
-    private JComboBox<String> goalComboBox;
+    private final JFormattedTextField heightField = new JFormattedTextField(NumberFormat.getNumberInstance());
+    private final JFormattedTextField weightField = new JFormattedTextField(NumberFormat.getNumberInstance());
+    private JComboBox<Integer> ageComboBox = new JComboBox<>();
+    private JComboBox<String> genderComboBox = new JComboBox<>();
+    private JComboBox<String> activityLevelComboBox = new JComboBox<>();
+    private JComboBox<String> goalComboBox = new JComboBox<>();
+    private final JTextField mealCountField = new JTextField(6);
 
     private JTextField bmrField;
     private JTextField bmiField;
     private JTextField waterRequirementField;
     private JTextField caloricIntakeField;
 
-    private Engine engine;
+    private Engine engine = new Engine();
+    private User currentUser = new User();
 
     public Profile(Engine engine) {
+        this.engine = engine;
+
         setupWindow();
         JPanel mainPanel = createMainPanel();
         add(mainPanel);
         setVisible(true);
+
+        currentUser = this.engine.getUser();
+        // Recupera i dati personali dell'utente
+        PersonalData personalData = currentUser.getPersonalData();
+        if (personalData != null) {
+            // Imposta i valori nei campi del profilo
+            ageComboBox.setSelectedItem(personalData.getAge());
+            weightField.setText(String.valueOf(personalData.getWeight()));
+            heightField.setText(String.valueOf(personalData.getHeight()));
+            genderComboBox.setSelectedItem(personalData.getGender());
+            activityLevelComboBox.setSelectedItem(personalData.getActivity());
+            goalComboBox.setSelectedItem(personalData.getGoal());
+            if (personalData.getCount_meal() != 0)
+                mealCountField.setText(String.valueOf(personalData.getMealCount()));
+        }
+
+
         addDocumentListeners();
-        this.engine = engine;
+        elaborateInputValues();
+
     }
 
     private void setupWindow() {
@@ -65,11 +89,12 @@ public class Profile extends JFrame {
     private JPanel createButtonPanel() {
         JPanel buttonPanel = new JPanel(new GridLayout(4, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-
-        JToggleButton button1 = createButton("Home", buttonGroup, () -> new PageNavigationController(this).navigateToHome());
-        JToggleButton button2 = createButton("Profile", buttonGroup, () -> new PageNavigationController(this).navigateToProfile());
-        JToggleButton button3 = createButton("Daily Plan", buttonGroup, () -> new PageNavigationController(this).navigateToDailyPlan());
-        JToggleButton button4 = createButton("Daily Tracker", buttonGroup, () -> new PageNavigationController(this).navigateToDailyTracker());
+        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        pageNavigationController.setEngine(engine);
+        JToggleButton button1 = createButton("Home", buttonGroup, pageNavigationController::navigateToHome);
+        JToggleButton button2 = createButton("Profile", buttonGroup, pageNavigationController::navigateToProfile);
+        JToggleButton button3 = createButton("Daily Plan", buttonGroup, pageNavigationController::navigateToDailyPlan);
+        JToggleButton button4 = createButton("Daily Tracker", buttonGroup, pageNavigationController::navigateToDailyTracker);
 
         button2.setSelected(true);
 
@@ -101,7 +126,7 @@ public class Profile extends JFrame {
 
         JToggleButton logoutButton = createButton("Logout", buttonGroup, () -> {
             // Autentifica l'utente con il database
-
+            engine.logout();
             // Dopo aver aggiunto il cibo, naviga alla pagina FoodsTable
             pageNavigationController.navigateToLogin();
         });
@@ -133,14 +158,14 @@ public class Profile extends JFrame {
 
         contentPanel.add(labelPanel, BorderLayout.NORTH);
 
-        JPanel centralPanel = new JPanel();
-        centralPanel.setLayout(new BoxLayout(centralPanel, BoxLayout.Y_AXIS));
+        JPanel centralPanel = new JPanel(new GridLayout(2, 1)); // 2 rows, 1 column
 
         createInputPanel(centralPanel);
         createSelectionPanel(centralPanel);
-        createOutputPanel(centralPanel);
 
         contentPanel.add(centralPanel, BorderLayout.CENTER);
+
+        createOutputPanel(contentPanel);
 
         return contentPanel;
     }
@@ -151,9 +176,11 @@ public class Profile extends JFrame {
             public void changedUpdate(DocumentEvent e) {
                 checkAndEditValues();
             }
+
             public void removeUpdate(DocumentEvent e) {
                 checkAndEditValues();
             }
+
             public void insertUpdate(DocumentEvent e) {
                 checkAndEditValues();
             }
@@ -164,7 +191,7 @@ public class Profile extends JFrame {
         weightField.getDocument().addDocumentListener(documentListener);
 
         // Create an ItemListener
-        ItemListener itemListener = new ItemListener(){
+        ItemListener itemListener = new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     checkAndEditValues();
@@ -194,8 +221,8 @@ public class Profile extends JFrame {
                 activityLevelComboBox.getSelectedItem() != null && goalComboBox.getSelectedItem() != null) {
 
             // Ottieni i valori dai campi di input
-            int height = Integer.parseInt(heightField.getText());
-            int weight = Integer.parseInt(weightField.getText());
+            double height = Double.parseDouble(heightField.getText());
+            double weight = Double.parseDouble(weightField.getText());
             int age = (int) ageComboBox.getSelectedItem();
             String gender = genderComboBox.getSelectedItem().toString();
             String activityLevel = activityLevelComboBox.getSelectedItem().toString();
@@ -256,14 +283,14 @@ public class Profile extends JFrame {
     }
 
     private void createInputPanel(JPanel contentPanel) {
-
-        JPanel inputPanel = new JPanel(new GridLayout(1, 4));
+        JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         inputPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
+        // Aggiungi i pannelli esistenti
         JPanel heightPanel = new JPanel();
         JLabel heightLabel = new JLabel("Height: ");
-        heightField = new JTextField(6);
         JLabel cmLabel = new JLabel("cm");
+        heightField.setPreferredSize(new Dimension(100, 20)); // Imposta la dimensione preferita del campo di testo
         heightPanel.add(heightLabel);
         heightPanel.add(heightField);
         heightPanel.add(cmLabel);
@@ -271,13 +298,14 @@ public class Profile extends JFrame {
 
         JPanel weightPanel = new JPanel();
         JLabel weightLabel = new JLabel("Weight: ");
-        weightField = new JTextField(6);
         JLabel kgLabel = new JLabel("kg");
+        weightField.setPreferredSize(new Dimension(100, 20)); // Imposta la dimensione preferita del campo di testo
         weightPanel.add(weightLabel);
         weightPanel.add(weightField);
         weightPanel.add(kgLabel);
         inputPanel.add(weightPanel);
 
+        // Aggiungi i pannelli per age e gender
         JPanel agePanel = new JPanel();
         JLabel ageLabel = new JLabel("Age: ");
         Integer[] ages = IntStream.rangeClosed(13, 99).boxed().toArray(Integer[]::new);
@@ -288,34 +316,27 @@ public class Profile extends JFrame {
 
         JPanel genderPanel = new JPanel();
         JLabel genderLabel = new JLabel("Gender: ");
-        genderComboBox = new JComboBox<>(new String[] {"M", "F"});
+        genderComboBox = new JComboBox<>(new String[]{"M", "F"});
         genderPanel.add(genderLabel);
         genderPanel.add(genderComboBox);
         inputPanel.add(genderPanel);
 
-        contentPanel.add(inputPanel, BorderLayout.CENTER);
+        contentPanel.add(inputPanel, BorderLayout.NORTH);
+
 
         // Crea un DocumentFilter che accetta solo numeri per i campi di alezza e peso
         DocumentFilter onlyNumberFilter = new DocumentFilter() {
             @Override
-            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) {
-                if (string.matches("\\d*")) {
-                    try {
-                        super.insertString(fb, offset, string, attr);
-                    } catch (BadLocationException e) {
-                        e.printStackTrace();
-                    }
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if (string.matches("\\d*") || string.isEmpty() || string.matches("\\d+\\.\\d*")) {
+                    super.insertString(fb, offset, string, attr);
                 }
             }
 
             @Override
-            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) {
-                if (text.matches("\\d*")) {
-                    try {
-                        super.replace(fb, offset, length, text, attrs);
-                    } catch (BadLocationException e) {
-                        e.printStackTrace();
-                    }
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if (text.matches("\\d*") || text.isEmpty() || text.matches("\\d+\\.\\d*")) {
+                    super.replace(fb, offset, length, text, attrs);
                 }
             }
         };
@@ -334,24 +355,56 @@ public class Profile extends JFrame {
     }
 
     private void createSelectionPanel(JPanel contentPanel) {
-        JPanel selectionPanel = new JPanel(new GridLayout(1, 2));
+        JPanel selectionPanel = new JPanel(new BorderLayout());
         selectionPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+        JPanel inputPanel = new JPanel(new GridLayout(1, 3)); // 1 row, 3 columns
 
         JPanel activityLevelPanel = new JPanel();
         JLabel activityLevelLabel = new JLabel("Activity Level: ");
-        activityLevelComboBox = new JComboBox<>(new String[] {"Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Super Active"});
+        activityLevelComboBox = new JComboBox<>(new String[]{"Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Super Active"});
         activityLevelPanel.add(activityLevelLabel);
         activityLevelPanel.add(activityLevelComboBox);
-        selectionPanel.add(activityLevelPanel);
+        inputPanel.add(activityLevelPanel);
 
         JPanel goalPanel = new JPanel();
         JLabel goalLabel = new JLabel("Goal: ");
         goalComboBox = new JComboBox<>(new String[]{"Weight Loss", "Slight Weight Loss", "Maintain Weight", "Slight Weight Gain", "Weight Gain"});
         goalPanel.add(goalLabel);
         goalPanel.add(goalComboBox);
-        selectionPanel.add(goalPanel);
+        inputPanel.add(goalPanel);
+
+        JPanel mealCountPanel = new JPanel();
+        JLabel mealCountLabel = new JLabel("Meal Count: ");
+        mealCountPanel.add(mealCountLabel);
+        mealCountPanel.add(mealCountField);
+        inputPanel.add(mealCountPanel);
+
+        selectionPanel.add(inputPanel, BorderLayout.CENTER);
+
+        // Crea un nuovo pannello per il pulsante "Save"
+        JPanel saveButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton saveButton = new JButton("Save");
+        saveButton.addActionListener(e -> {
+            // Recupera i valori dai campi di input
+            double height = Double.parseDouble(heightField.getText());
+            double weight = Double.parseDouble(weightField.getText());
+            int age = (int) ageComboBox.getSelectedItem();
+            String gender = genderComboBox.getSelectedItem().toString();
+            String activityLevel = activityLevelComboBox.getSelectedItem().toString();
+            String goal = goalComboBox.getSelectedItem().toString();
+            int mealCount = Integer.parseInt(mealCountField.getText());
+
+            // Crea un nuovo oggetto PersonalData con i valori recuperati
+            PersonalData personalData = new PersonalData(height, weight, age, gender, activityLevel, goal);
+            personalData.setMealCount(mealCount);
+
+            // Salva l'oggetto PersonalData
+            engine.addPersonalData(personalData);
+        });
+        saveButtonPanel.add(saveButton);
+        selectionPanel.add(saveButtonPanel, BorderLayout.SOUTH);
 
         contentPanel.add(selectionPanel, BorderLayout.CENTER);
     }
-
 }

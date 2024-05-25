@@ -20,10 +20,10 @@ public class dbActivitiesManager {
 
     public  void select() throws SQLException {
         String query = "SELECT COUNT (*) FROM activities WHERE id_user = " + user.getId();
-        ResultSet rissa =Db.result(query);
-        if(rissa.next()) {
-            int countAzz = rissa.getInt(1);
-            if(countAzz > 0) {
+        ResultSet ris =Db.result(query);
+        if(ris.next()) {
+            int count = ris.getInt(1);
+            if(count> 0) {
                 query = "SELECT * FROM activities WHERE id_user = " + user.getId();
                 ResultSet rs=Db.result(query);
                 if(rs.next()) {
@@ -58,7 +58,19 @@ public class dbActivitiesManager {
     }
 
     public static void deleteActivities_withUser(int id_user) {
-        String query = "DELETE FROM activities WHERE id_user = " + id_user;
-        Db.result(query);
+
+        try {
+            String query = "SELECT COUNT (*) FROM activities WHERE id_user = " + id_user;
+            ResultSet ris = Db.result(query);
+            if (ris.next()) {
+                int count = ris.getInt(1);
+                if (count > 0) {
+                    query = "DELETE FROM activities WHERE id_user = " + id_user;
+                    Db.result(query);
+                }
+            }
+        }catch (SQLException e){
+            System.err.println("Errore durante la cancellazione delle attività: " + e.getMessage());
+        }
     }
 }

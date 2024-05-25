@@ -1,5 +1,6 @@
 package View;
 
+import Controller.Engine;
 import Controller.PageNavigationController;
 import Controller.dbFoodManager;
 import Model.Entities.Food;
@@ -27,8 +28,10 @@ public class AddFoodView extends JFrame {
     private JTextField fatsField;
     private Food food;
     private NutritionalInfo nutritionalInfo;
+    private Engine engine;
 
-    public AddFoodView() {
+    public AddFoodView(Engine e) {
+        engine=e;
         setupWindow();
         JPanel mainPanel = createMainPanel();
         add(mainPanel);
@@ -162,7 +165,7 @@ public class AddFoodView extends JFrame {
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
         PageNavigationController pageNavigationController = new PageNavigationController(this);
-
+        pageNavigationController.setEngine(engine);
         JToggleButton addFoodButton = createButton("Add", buttonGroup, () -> {
             String name = nameField.getText();
             float calories = Float.parseFloat(caloriesField.getText());
@@ -189,7 +192,7 @@ public class AddFoodView extends JFrame {
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
         PageNavigationController pageNavigationController = new PageNavigationController(this);
-
+        pageNavigationController.setEngine(engine);
         JToggleButton backButton = createButton("Back", buttonGroup, pageNavigationController::navigateToFoodTable);
 
         buttonPanel.add(backButton);

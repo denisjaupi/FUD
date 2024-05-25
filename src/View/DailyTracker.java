@@ -1,13 +1,15 @@
 package View;
 
+import Controller.Engine;
 import Controller.PageNavigationController;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class DailyTracker extends JFrame {
-
-    public DailyTracker() {
+    Engine engine;
+    public DailyTracker(Engine e) {
+        engine=e;
         setupWindow();
         JPanel mainPanel = createMainPanel();
         add(mainPanel);
@@ -45,7 +47,7 @@ public class DailyTracker extends JFrame {
         JPanel buttonPanel = new JPanel(new GridLayout(4, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
         PageNavigationController pageNavigationController = new PageNavigationController(this);
-
+        pageNavigationController.setEngine(engine);
         JToggleButton button1 = createButton("Home", buttonGroup, pageNavigationController::navigateToHome);
         JToggleButton button2 = createButton("Profile", buttonGroup, pageNavigationController::navigateToProfile);
         JToggleButton button3 = createButton("Daily Plan", buttonGroup, pageNavigationController::navigateToDailyPlan);

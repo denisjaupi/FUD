@@ -1,5 +1,6 @@
 package View;
 
+import Controller.Engine;
 import Controller.PageNavigationController;
 
 import javax.swing.*;
@@ -8,12 +9,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Home extends JFrame {
+    private Engine engine= new Engine();
 
-    public Home() {
+    public Home(Engine e) {
         setupWindow();
+        engine=e;
         JPanel mainPanel = createMainPanel();
         add(mainPanel);
         setVisible(true);
+
     }
 
     ////////////////////////////////////////////////////////////////
@@ -48,6 +52,7 @@ public class Home extends JFrame {
         JPanel logPanel = new JPanel(new GridLayout(1, 2));
         ButtonGroup buttonGroup = new ButtonGroup();
         PageNavigationController pageNavigationController = new PageNavigationController(this);
+        pageNavigationController.setEngine(engine);
         logPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Crea il primo pulsante
@@ -69,6 +74,7 @@ public class Home extends JFrame {
         JPanel dbButtonsPanel = new JPanel(new GridLayout(2, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
         PageNavigationController pageNavigationController = new PageNavigationController(this);
+        pageNavigationController.setEngine(engine);
         dbButtonsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Crea il primo pulsante
@@ -232,7 +238,7 @@ public class Home extends JFrame {
         JPanel buttonPanel = new JPanel(new GridLayout(4, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
         PageNavigationController pageNavigationController = new PageNavigationController(this);
-
+        pageNavigationController.setEngine(engine);
         JToggleButton button1 = createButton("Home", buttonGroup, null);
         JToggleButton button2 = createButton("Profile", buttonGroup, pageNavigationController::navigateToProfile);
         JToggleButton button3 = createButton("Daily Plan", buttonGroup, pageNavigationController::navigateToDailyPlan);

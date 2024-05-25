@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.Entities.PersonalData;
 import Model.Entities.User;
 
 import java.sql.SQLException;
@@ -67,6 +68,7 @@ public class Engine {
                 dbDM.select();
 
                 dbRM.select();
+                setUser(dbRM.getUser());
 
                 return true;
             }
@@ -76,6 +78,22 @@ public class Engine {
             return false;
         }
     }
+    public void setUser(User u){
+        user = u;
+    }
+    public void logout(){
+        user=null;
+    }
 
+    public void addPersonalData(PersonalData p){
+        try {
+            dbPDM.addPersonalData(p.getAge(), p.getWeight(), p.getHeight(), p.getGender(), p.getActivity(), p.getGoal(), p.getMealCount());
+        }catch (SQLException e){
+            System.err.println("Errore durante l'aggiunta dei dati personali: " + e.getMessage());
+        }
+    }
+    public User getUser(){
+        return user;
+    }
 
 }

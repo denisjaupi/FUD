@@ -5,6 +5,7 @@ import Model.Entities.PersonalData;
 import Model.Entities.User;
 import Model.Util.CalculatedProfileData;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -17,23 +18,57 @@ public class dbPersonalDataManager {
         user = u;
     }
 
-    public static void addPersonalData(int age, int weight, int height, String gender, String activity, String goals, int meal_count) throws SQLException {
-        String query="insert into personaldata (height, weight, gender, age, activity, goals, meal_count) values("+height+", "+weight+","+gender+","+age+","+activity+","+goals+","+meal_count+")";
-        Db.result(query);
-        ResultSet rs = Db.result("SELECT LAST_INSERT_ID()");
-        pd=new PersonalData(height, weight, age, gender, activity, goals);
-        pd.setMealCount(meal_count);
-        pd.setId(rs.getInt(1));
-        CalculatedProfileData cpd =pd.getCalculatedProfileData();
-        dbCalculateProfileDataManager.addCalculateProfileData(cpd.getBmi(), cpd.getWaterRequirement(), cpd.getBmr(), cpd.getCaloricIntake(), pd.getId());
-        user.setPersonalData(pd);
-        dbUserManager.addinfo(user.getId(), rs.getInt(1));
+    public static void addPersonalData(int age, double weight, double height, String gender, String activity, String goals, int meal_count) throws SQLException {
+        String selectQuery = "SELECT id_info FROM users WHERE id_user = " + user.getId();
+        ResultSet rs = Db.result(selectQuery);
+        String query;
+        Connection connection = null;
+
+        try {
+            if (rs != null && rs.next()) {
+                int userIdInfo = rs.getInt("id_info");
+                if (userIdInfo != 0) { // Controlla se l'ID_info non è nullo
+                    // L'utente ha già un id_info non nullo, quindi aggiorna i dati esistenti
+                    query = "UPDATE personaldata SET height = " + height + ", weight = " + weight + ", gender = '" + gender + "', age = " + age + ", activity = '" + activity + "', goals = '" + goals + "', meal_count = " + meal_count + " WHERE id_info = " + userIdInfo;
+                    Db.update(query);
+
+                    // Aggiorna i valori nella tabella CalculateProfileData
+                    PersonalData pd = new PersonalData(height, weight, age, gender, activity, goals);
+                    pd.setMealCount(meal_count);
+                    pd.setId(userIdInfo);
+                    CalculatedProfileData cpd = pd.getCalculatedProfileData();
+                    dbCalculateProfileDataManager.updateValues(cpd.getBmi(), cpd.getWaterRequirement(), cpd.getBmr(), cpd.getCaloricIntake(), userIdInfo);
+                    user.setPersonalData(pd);
+                } else {
+                    // L'utente non ha un id_info o è nullo, quindi inserisci nuovi dati
+                    query = "INSERT INTO personaldata (height, weight, gender, age, activity, goals, meal_count) " +
+                            "VALUES (" + height + ", " + weight + ", '" + gender + "', " + age + ", '" + activity + "', '" + goals + "', " + meal_count + ") RETURNING id_info;";
+                    ResultSet insertResult = Db.select(query);
+                    if (insertResult != null && insertResult.next()) {
+                        int lastId = insertResult.getInt("id_info");
+                        PersonalData pd = new PersonalData(height, weight, age, gender, activity, goals);
+                        pd.setMealCount(meal_count);
+                        pd.setId(lastId);
+                        CalculatedProfileData cpd = pd.getCalculatedProfileData();
+                        dbCalculateProfileDataManager.addCalculateProfileData(cpd.getBmi(), cpd.getWaterRequirement(), cpd.getBmr(), cpd.getCaloricIntake(), lastId);
+                        user.setPersonalData(pd);
+                        dbUserManager.addinfo(user.getId(), lastId);
+                    }
+                }
+            }
+        } finally {
+            if (rs != null) rs.close();
+            if (connection != null) connection.close();
+        }
     }
 
 
-    public static void deletePersonalData(int id){
+
+
+
+    public static void deletePersonalData(int id) throws SQLException {
         String query="delete from personaldata where id_info="+id;
-        Db.result(query);
+        Db.update(query);
     }
 
 

@@ -29,11 +29,12 @@ public class LoginView extends JFrame {
 
 
     public LoginView(Engine engine) {
+        this.engine = engine;
         setupWindow();
         JPanel mainPanel = createMainPanel();
         add(mainPanel);
         setVisible(true);
-        this.engine = engine;
+
     }
 
     ////////////////////////////////////////////////////////////////
@@ -126,7 +127,7 @@ public class LoginView extends JFrame {
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
         PageNavigationController pageNavigationController = new PageNavigationController(this);
-        pageNavigationController.setEngine(engine);
+
 
         JToggleButton loginButton = createButton("Login", buttonGroup, () -> {
             // Esegui il login
@@ -135,12 +136,13 @@ public class LoginView extends JFrame {
 
             if (engine.login(email, password)) {
                 System.out.println("Login effettuato con successo");
+                pageNavigationController.setEngine(engine);
+                pageNavigationController.navigateToHome();
             } else {
                 System.out.println("Credenziali non valide");
             }
 
-            // Dopo aver aggiunto il cibo, naviga alla pagina FoodsTable
-            pageNavigationController.navigateToHome();
+
         });
 
         buttonPanel.add(loginButton);
