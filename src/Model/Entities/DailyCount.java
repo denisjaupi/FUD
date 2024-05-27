@@ -40,6 +40,9 @@ public class DailyCount {
         updateNum_exe(1);
 
     }
+    public void setUsername( String username){
+        this.username=username;
+    }
 
     private void updateNum_exe(int control) {
         if (control == 1) {
@@ -55,8 +58,26 @@ public class DailyCount {
             num_meal = num_meal - 1;
         }
     }
-    public double calculateTotalCalories(int weight) {
-        double totalCalories = 0.0;
+
+    public double calculteBurnedCalories(double weight){
+        double burnedCalories =0;
+        for(Exercise exercise : exercises) {
+            burnedCalories+=exercise.countBurnCalories(weight);
+        }
+        return burnedCalories;
+    }
+
+    public double calculteTakeCalories(double weight){
+        double takeCalories =0;
+        for (Meal meal : meals) {
+            meal.calculateTotalCalories();
+            takeCalories += meal.info.calories;
+        }
+        return takeCalories ;
+    }
+
+    public double calculateTotalCalories(double weight) {
+        double totalCalories = 0;
         for (Meal meal : meals) {
             meal.calculateTotalCalories();
             this.info.calories += meal.info.calories;
@@ -64,10 +85,9 @@ public class DailyCount {
             this.info.proteins= meal.info.proteins;
             this.info.fats= meal.info.fats;
         }
-        for(Exercise exercise : exercises) {
-            exercise.countBurnCalories(weight);
-            this.info.calories-= exercise.countBurnCalories(weight);
-        }
+
+        this.info.calories-= calculteBurnedCalories(weight);
+
         return totalCalories;
     }
 

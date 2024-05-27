@@ -33,6 +33,7 @@ public class dbUserManager {
                 if(idInfo!=0) {
                     dbPM.selectPersonalData(idInfo);
                 }
+                user.getDailyCount().setUsername(user.getUserName());
             }
         }catch(SQLException e){
             System.err.println("Errore durante l'esecuzione della query nella select_user: " + e.getMessage());

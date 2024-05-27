@@ -2,6 +2,7 @@ package View;
 
 import Controller.Engine;
 import Controller.PageNavigationController;
+import Model.Entities.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,6 +11,7 @@ import java.awt.event.ActionListener;
 
 public class Home extends JFrame {
     private Engine engine= new Engine();
+
 
     public Home(Engine e) {
         setupWindow();
@@ -181,6 +183,13 @@ public class Home extends JFrame {
         JTextField burnedCaloriesField = createCenteredNonEditableTextField();
         burnedCaloriesField.setFont(new Font(dailyCaloricIntakeField.getFont().getName(), Font.BOLD, 42));
 
+        if (engine.getUser().getPersonalData().getId()!=0 && engine.getUser().getDailyCount()!= null) {
+            double weight= engine.getUser().getPersonalData().getWeight();
+            int burnedCaloriesInt = (int) engine.getUser().getDailyCount().calculteBurnedCalories(weight);
+            // Impostazione del valore nel JTextField
+            burnedCaloriesField.setText(String.valueOf(burnedCaloriesInt));
+
+        }
         // Crea il JTextField per le calorie rimanenti
         JLabel remainingCaloriesLabel = new JLabel("Eaten");
         JTextField remainingCaloriesField = createCenteredNonEditableTextField();

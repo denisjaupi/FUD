@@ -9,7 +9,10 @@ public class User {
     private RecipeList recipe;
     private DailyCount dailyCount;
 
-    public User() {}
+    public User() {
+        dailyCount= new DailyCount(this.userName);
+        recipe= new RecipeList(this.userName);
+    }
 
     public User(String email, String password, String userName) {
         this.email = email;
