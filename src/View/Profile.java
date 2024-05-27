@@ -10,6 +10,7 @@ import java.awt.event.ItemListener;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.stream.IntStream;
+import java.text.DecimalFormat;
 
 import Controller.Engine;
 import Controller.PageNavigationController;
@@ -239,11 +240,14 @@ public class Profile extends JFrame {
             // Ottieni i valori calcolati
             CalculatedProfileData calculatedProfileData = personalData.getCalculatedProfileData();
 
+            //Numero di valori decimali dopo la virgola
+            DecimalFormat df = new DecimalFormat("#.###");
+
             // Assegna i valori calcolati ai campi di testo corrispondenti
-            bmrField.setText(String.valueOf(calculatedProfileData.getBmr()));
-            bmiField.setText(String.valueOf(calculatedProfileData.getBmi()));
-            waterRequirementField.setText(String.valueOf(calculatedProfileData.getWaterRequirement()));
-            caloricIntakeField.setText(String.valueOf(calculatedProfileData.getCaloricIntake()));
+            bmrField.setText(df.format(calculatedProfileData.getBmr()));
+            bmiField.setText(df.format(calculatedProfileData.getBmi()));
+            waterRequirementField.setText(df.format(calculatedProfileData.getWaterRequirement()));
+            caloricIntakeField.setText(df.format(calculatedProfileData.getCaloricIntake()));
 
         }
     }

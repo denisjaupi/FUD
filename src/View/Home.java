@@ -167,6 +167,14 @@ public class Home extends JFrame {
         JTextField dailyCaloricIntakeField = createCenteredNonEditableTextField();
         dailyCaloricIntakeField.setFont(new Font(dailyCaloricIntakeField.getFont().getName(), Font.BOLD, 56));
 
+        double dailyCaloricIntakeDouble = engine.getUser().getPersonalData().getCalculatedProfileData().getCaloricIntake();
+
+        int dailyCaloricIntakeInt = (int) dailyCaloricIntakeDouble;
+
+        // Impostazione del valore nel JTextField
+        dailyCaloricIntakeField.setText(String.valueOf(dailyCaloricIntakeInt));
+
+
         // Crea il JTextField per le calorie bruciate
         JLabel burnedCaloriesLabel = new JLabel("Burned");
         JTextField burnedCaloriesField = createCenteredNonEditableTextField();
