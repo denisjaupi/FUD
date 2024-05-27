@@ -1,5 +1,6 @@
 package View;
 
+import Controller.Engine;
 import Controller.PageNavigationController;
 import Controller.dbExerciseManager;
 
@@ -11,7 +12,11 @@ import java.sql.SQLException;
 
 public class TrainingTable extends JFrame {
 
-    public TrainingTable() {
+    private Engine engine;
+
+    public TrainingTable(Engine engine) {
+        this.engine = engine;
+
         setupWindow();
         JPanel mainPanel = createMainPanel();
         add(mainPanel);
@@ -58,6 +63,7 @@ public class TrainingTable extends JFrame {
 
         ///////////////////////////////////////////////////////
         PageNavigationController pageNavigationController = new PageNavigationController(this);
+        pageNavigationController.setEngine(engine);
 
         // Aggiungi un TableCellRenderer e un TableCellEditor alla colonna "Add"
         TableColumn addColumn = table.getColumn("Add");
@@ -154,6 +160,7 @@ public class TrainingTable extends JFrame {
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
         PageNavigationController pageNavigationController = new PageNavigationController(this);
+        pageNavigationController.setEngine(engine);
 
         JToggleButton backButton = createButton("Back", buttonGroup, pageNavigationController::navigateToHome);
 

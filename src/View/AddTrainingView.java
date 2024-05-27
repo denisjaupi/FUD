@@ -1,9 +1,13 @@
 package View;
 
+import Controller.Engine;
 import Controller.PageNavigationController;
 import Controller.dbExerciseManager;
+import Model.Entities.Exercise;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
@@ -20,9 +24,13 @@ public class AddTrainingView extends JFrame {
     // Dichiaro i campi di testo come variabili di istanza
     private JTextField nameField;
     private JTextField intensityField;
+    private JTextField caloriesField;
+    private Engine engine;
+    private Exercise exercise;
 
 
-    public AddTrainingView(String name, String intensity) {
+    public AddTrainingView(String name, String intensity, Engine e ) {
+        engine=e;
         setupWindow();
         JPanel mainPanel = createMainPanel(name, intensity);
         add(mainPanel);
@@ -33,13 +41,21 @@ public class AddTrainingView extends JFrame {
 
     private JPanel createMainPanel(String name, String intensity) {
         JPanel mainPanel = new JPanel(new BorderLayout());
-        JPanel backButtonPanel = createBackButtonPanel();
-        JPanel addButtonPanel = createAddButtonPanel();
-        JPanel contentPanel = createContentPanel(name, intensity); // Passa i parametri al metodo createContentPanel
+        try {
+            exercise = new Exercise(engine.getDbExercise().selectId(name, intensity), name, engine.getDbExercise().selectMet(name, intensity));
+            exercise.setIntensity(intensity);
 
-        mainPanel.add(backButtonPanel, BorderLayout.WEST);
-        mainPanel.add(contentPanel, BorderLayout.CENTER);
-        mainPanel.add(addButtonPanel, BorderLayout.EAST);
+
+            JPanel backButtonPanel = createBackButtonPanel();
+            JPanel addButtonPanel = createAddButtonPanel();
+            JPanel contentPanel = createContentPanel(name, intensity); // Passa i parametri al metodo createContentPanel
+
+            mainPanel.add(backButtonPanel, BorderLayout.WEST);
+            mainPanel.add(contentPanel, BorderLayout.CENTER);
+            mainPanel.add(addButtonPanel, BorderLayout.EAST);
+        }catch (SQLException e){
+            System.err.println("Errore durante la creazione del pannello principale");
+        }
 
         return mainPanel;
     }
@@ -95,7 +111,8 @@ public class AddTrainingView extends JFrame {
         SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, 300, 1); // Valore iniziale, minimo, massimo, passo
         JSpinner durationSpinner = new JSpinner(spinnerModel);
 
-        //////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
         // Imposta un JFormattedTextField come editor dello spinner
         JSpinner.NumberEditor editor = new JSpinner.NumberEditor(durationSpinner);
         durationSpinner.setEditor(editor);
@@ -135,16 +152,48 @@ public class AddTrainingView extends JFrame {
                 }
             }
         });
-        //////////////////
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
 
         selectPanel.add(durationLabel);
         selectPanel.add(durationSpinner);
 
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
         JLabel caloriesLabel = new JLabel("Calories:");
         caloriesLabel.setFont(new Font("Arial", Font.BOLD, 18));
         caloriesLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        JTextField caloriesField = new JTextField();
+        caloriesField = new JTextField();
         caloriesField.setEditable(false);
+        caloriesField.setText(String.valueOf(exercise.getCalories()));
+
+        // Aggiungi un ChangeListener allo spinner
+        durationSpinner.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                // Ottieni il nuovo valore dello spinner
+                int timeEx = (int)durationSpinner.getValue();
+
+                // Aggiorna il tempo dell'esercizio
+                exercise.setTime(timeEx);
+
+                // Calcola le calorie bruciate
+                if(engine.getUser().getPersonalData().getId() != 0)
+                {
+                    exercise.countBurnCalories(engine.getUser().getPersonalData().getWeight());
+                }
+                else
+                {
+                    System.out.println("Dati personali non inseriti");
+                    JOptionPane.showMessageDialog(AddTrainingView.this, "Please insert personal data first", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+
+                // Aggiorna il campo di testo delle calorie
+                caloriesField.setText(String.valueOf(exercise.getCalories()));
+            }
+        });
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
 
         selectPanel.add(caloriesLabel);
         selectPanel.add(caloriesField);
@@ -179,12 +228,14 @@ public class AddTrainingView extends JFrame {
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
         PageNavigationController pageNavigationController = new PageNavigationController(this);
-
+        pageNavigationController.setEngine(engine);
         JToggleButton addFoodButton = createButton("Add", buttonGroup, () -> {
-            // Aggiungi il cibo al database
-
-            // Dopo aver aggiunto il cibo, naviga alla pagina FoodsTable
-            pageNavigationController.navigateToHome();
+            try {
+                engine.getDbActiv().addActivity(exercise.getId(), exercise.getCalories(), exercise.getTime());
+                pageNavigationController.navigateToHome();
+            } catch (SQLException e) {
+                System.err.println("Errore durante l'aggiunta dell'attività: " + e.getMessage());
+            }
         });
 
         buttonPanel.add(addFoodButton);
@@ -197,7 +248,7 @@ public class AddTrainingView extends JFrame {
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
         PageNavigationController pageNavigationController = new PageNavigationController(this);
-
+        pageNavigationController.setEngine(engine);
         JToggleButton backButton = createButton("Back", buttonGroup, pageNavigationController::navigateToTrainingTable);
 
         buttonPanel.add(backButton);

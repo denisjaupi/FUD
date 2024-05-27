@@ -118,7 +118,7 @@ public class PageNavigationController {
         currentFrame.dispose();
 
         // Open the DailyPlan window
-        TrainingTable trainingTable = new TrainingTable();
+        TrainingTable trainingTable = new TrainingTable(engine);
         trainingTable.setSize(frameSize); // set the size of the new window
         trainingTable.setLocation(frameLocation); // set the location of the new window
     }
@@ -160,7 +160,7 @@ public class PageNavigationController {
         currentFrame.dispose();
 
         // Open the DailyPlan window
-        AddTrainingView addTrainingView = new AddTrainingView(name, intensity);
+        AddTrainingView addTrainingView = new AddTrainingView(name, intensity, engine);
         addTrainingView.setSize(frameSize); // set the size of the new window
         addTrainingView.setLocation(frameLocation); // set the location of the new window
     }

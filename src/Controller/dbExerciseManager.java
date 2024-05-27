@@ -9,11 +9,11 @@ public class dbExerciseManager {
         return Db.result("SELECT name,met, intensity FROM exercise Order by name ASC");
     }
 
-    public static ResultSet getFood_withId(int id) {
+    public static ResultSet getExercise_withId(int id) {
         return Db.result("SELECT name,met, intensity FROM exercise where id_exercise = " + id);
     }
 
-    public static ResultSet getFood_withName(String name) {
+    public static ResultSet getExercise_withName(String name) {
         return Db.result("SELECT name, met, intensity FROM exercise where name = '" + name + "'");
     }
 
@@ -83,5 +83,25 @@ public class dbExerciseManager {
             System.out.println("Errore durante l'eliminazione del cibo dal database");
             e.printStackTrace();
         }
+    }
+
+    public int selectId (String name, String intensity) throws SQLException {
+        String query = "SELECT id_exercise FROM exercise WHERE name = '" + name + "' AND intensity = '" + intensity + "'";
+        ResultSet rs = Db.result(query);
+        int id = 0;
+        if (rs.next()) {
+            id = rs.getInt(1);
+        }
+        return id;
+    }
+
+    public double selectMet (String name, String intensity) throws SQLException {
+        String query = "select met from exercise where name = '" + name + "' and intensity =  '" + intensity + "'";
+        ResultSet rs = Db.select(query);
+        double met = 0;
+        if (rs.next()) {
+            met = rs.getInt(1);
+        }
+        return met;
     }
 }

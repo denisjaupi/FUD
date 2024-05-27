@@ -96,4 +96,11 @@ public class Engine {
         return user;
     }
 
+    public dbActivitiesManager getDbActiv() {
+        return dbActiv;
+    }
+
+    public dbExerciseManager getDbExercise() {
+        return dbEM;
+    }
 }

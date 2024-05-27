@@ -29,8 +29,8 @@ public class dbActivitiesManager {
                 if(rs.next()) {
                     do{
                         int id_exercise = rs.getInt("id_exercise");
-                        float calories = rs.getFloat("calories");
-                        float time = rs.getFloat("time");
+                        double calories = rs.getDouble("calories");
+                        int time = rs.getInt("time");
                         query="select * from exercises where id_exercise="+id_exercise;
                         rs=Db.result(query);
                         if(rs.next()) {
@@ -47,9 +47,19 @@ public class dbActivitiesManager {
         }
     }
 
-    public static void addActivity(int id_exercise, float calories, float time) {
+    public void addActivity(int id_exercise, double calories, int time) throws SQLException {
         String query = "INSERT INTO activities (id_exercise, calories, time, id_user) VALUES (" + id_exercise+ ", " + calories + ", " + time+ "," + user.getId() + ")";
         Db.result(query);
+        query = "select * from exercises where id_exercise =" + id_exercise;
+        ResultSet rs = Db.result(query);
+        if (rs.next()) {
+            Exercise e = new Exercise(id_exercise, rs.getString("name"), rs.getDouble("met"));
+            e.setCalories(calories);
+            e.setIntensity(rs.getString("intensity"));
+            e.setTime(time);
+            user.getDailyCount().addExercise(e);
+        }
+
     }
 
     public static void deleteActivities(int id_activity) {
