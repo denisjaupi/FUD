@@ -4,8 +4,8 @@ import Model.Util.CalculatedProfileData;
 
 public class PersonalData{
     private int id;
-    private double height;
-    private double weight;
+    private float height;
+    private float weight;
     private int age;
     private String gender;
     private String activity;  //quante volte ti alleni
@@ -17,7 +17,7 @@ public class PersonalData{
 
     }
 
-    public PersonalData(double height, double weight, int age, String gender, String activity, String goal){
+    public PersonalData(float height, float weight, int age, String gender, String activity, String goal){
         this.height = height;
         this.weight = weight;
         this.age = age;
@@ -49,7 +49,7 @@ public class PersonalData{
         return height;
     }
 
-    public void setHeight(double height){
+    public void setHeight(float height){
         this.height = height;
     }
 
@@ -57,7 +57,7 @@ public class PersonalData{
         return weight;
     }
 
-    public void setWeight(double weight){
+    public void setWeight(float weight){
         this.weight = weight;
     }
 

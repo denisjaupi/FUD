@@ -24,8 +24,8 @@ public class DailyPlan extends JFrame {
     private JTextField caloricIntakeField;
 
     public DailyPlan(Engine e) {
-        engine= e;
         setupWindow();
+        engine= e;
         JPanel mainPanel = createMainPanel();
         add(mainPanel);
         setVisible(true);
@@ -197,7 +197,7 @@ public class DailyPlan extends JFrame {
         /////////////////////////////////////////////////////////////////////////
 
         JButton macrosDistributionButton = new JButton("Edit Macros Distribution");
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController = PageNavigationController.getIstance(this);
         pageNavigationController.setEngine(engine);
         macrosDistributionButton.addActionListener(e -> pageNavigationController.navigateToTypeOfDietTable());
         // macrosDistributionButton.setPreferredSize(new Dimension(macrosDistributionButton.getPreferredSize().width, 50));
@@ -401,7 +401,7 @@ public class DailyPlan extends JFrame {
     private JPanel createButtonPanel() {
         JPanel buttonPanel = new JPanel(new GridLayout(4, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController = PageNavigationController.getIstance(this);
         pageNavigationController.setEngine(engine);
         JToggleButton button1 = createButton("Home", buttonGroup, pageNavigationController::navigateToHome);
         JToggleButton button2 = createButton("Profile", buttonGroup, pageNavigationController::navigateToProfile);

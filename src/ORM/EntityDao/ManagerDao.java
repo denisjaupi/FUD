@@ -1,7 +1,10 @@
-package Model.Database;
-import java.sql.*;
+package ORM.EntityDao;
 
-public class Db{
+import java.sql.*;
+import java.util.ArrayList;
+
+public class ManagerDao {
+
     private static final String URL = "jdbc:postgresql://localhost:5432/FUD";
     private static final String USERNAME = "postgres";
     private static final String PASSWORD = "postgres";
@@ -141,5 +144,19 @@ public class Db{
         return rowsAffected;
     }
 
+    public static void executeBatch(String query, ArrayList<Object[]> paramsList) throws SQLException {
+        Connection connection = getConnection();
+        PreparedStatement pstmt = connection.prepareStatement(query);
 
+        for (Object[] params : paramsList) {
+            for (int i = 0; i < params.length; i++) {
+                pstmt.setObject(i + 1, params[i]);
+            }
+            pstmt.addBatch();
+        }
+        pstmt.executeBatch();
+
+        pstmt.close();
+        connection.close();
+    }
 }

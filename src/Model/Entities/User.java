@@ -8,6 +8,7 @@ public class User {
     private PersonalData pd = new PersonalData();
     private RecipeList recipe;
     private DailyCount dailyCount;
+    int id_persnalData=0;
 
     public User() {
         dailyCount= new DailyCount(this.userName);
@@ -60,6 +61,12 @@ public class User {
         return recipe;
     }
 
+    public void setId_persnalData(int id_persnalData) {
+        this.id_persnalData = id_persnalData;
+    }
 
+    public int getId_persnalData() {
+        return id_persnalData;
+    }
 }
 

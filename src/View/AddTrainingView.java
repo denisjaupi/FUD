@@ -2,7 +2,6 @@ package View;
 
 import Controller.Engine;
 import Controller.PageNavigationController;
-import Controller.dbExerciseManager;
 import Model.Entities.Exercise;
 
 import javax.swing.*;
@@ -29,7 +28,7 @@ public class AddTrainingView extends JFrame {
     private Exercise exercise;
 
 
-    public AddTrainingView(String name, String intensity, Engine e ) {
+    public AddTrainingView(String name, String intensity, Engine e ) throws SQLException {
         engine=e;
         setupWindow();
         JPanel mainPanel = createMainPanel(name, intensity);
@@ -39,23 +38,19 @@ public class AddTrainingView extends JFrame {
 
     ////////////////////////////////////////////////////////////////
 
-    private JPanel createMainPanel(String name, String intensity) {
+    private JPanel createMainPanel(String name, String intensity) throws SQLException {
         JPanel mainPanel = new JPanel(new BorderLayout());
-        try {
-            exercise = new Exercise(engine.getDbExercise().selectId(name, intensity), name, engine.getDbExercise().selectMet(name, intensity));
-            exercise.setIntensity(intensity);
+        exercise = new Exercise(engine.selectId_exercise(name, intensity), name, engine.selectMet_exercise(name, intensity));
+        exercise.setIntensity(intensity);
 
 
-            JPanel backButtonPanel = createBackButtonPanel();
-            JPanel addButtonPanel = createAddButtonPanel();
-            JPanel contentPanel = createContentPanel(name, intensity); // Passa i parametri al metodo createContentPanel
+        JPanel backButtonPanel = createBackButtonPanel();
+        JPanel addButtonPanel = createAddButtonPanel();
+        JPanel contentPanel = createContentPanel(name, intensity); // Passa i parametri al metodo createContentPanel
 
-            mainPanel.add(backButtonPanel, BorderLayout.WEST);
-            mainPanel.add(contentPanel, BorderLayout.CENTER);
-            mainPanel.add(addButtonPanel, BorderLayout.EAST);
-        }catch (SQLException e){
-            System.err.println("Errore durante la creazione del pannello principale");
-        }
+        mainPanel.add(backButtonPanel, BorderLayout.WEST);
+        mainPanel.add(contentPanel, BorderLayout.CENTER);
+        mainPanel.add(addButtonPanel, BorderLayout.EAST);
 
         return mainPanel;
     }
@@ -227,12 +222,15 @@ public class AddTrainingView extends JFrame {
 
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController = PageNavigationController.getIstance(this);
         pageNavigationController.setEngine(engine);
         JToggleButton addFoodButton = createButton("Add", buttonGroup, () -> {
             try {
-                engine.getDbActiv().addActivity(exercise.getId(), exercise.getCalories(), exercise.getTime());
-                pageNavigationController.navigateToHome();
+                if(engine.addActivity(exercise.getId(), exercise.getCalories(), exercise.getTime()))
+                     pageNavigationController.navigateToHome();
+                else
+                    JOptionPane.showMessageDialog(AddTrainingView.this, "This exercise is already present among your activities ", "Error", JOptionPane.ERROR_MESSAGE);
+
             } catch (SQLException e) {
                 System.err.println("Errore durante l'aggiunta dell'attività: " + e.getMessage());
             }
@@ -247,7 +245,7 @@ public class AddTrainingView extends JFrame {
 
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController = PageNavigationController.getIstance(this);
         pageNavigationController.setEngine(engine);
         JToggleButton backButton = createButton("Back", buttonGroup, pageNavigationController::navigateToTrainingTable);
 

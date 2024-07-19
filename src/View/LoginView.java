@@ -2,7 +2,6 @@ package View;
 
 import Controller.Engine;
 import Controller.PageNavigationController;
-import Controller.dbFoodManager;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -25,7 +24,7 @@ public class LoginView extends JFrame {
     // Dichiaro i campi di testo come variabili di istanza
     private JTextField emailField;
     private JTextField passwordField;
-    private Engine engine = new Engine();
+    private Engine engine;
 
 
     public LoginView(Engine engine) {
@@ -126,7 +125,7 @@ public class LoginView extends JFrame {
 
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController = PageNavigationController.getIstance(this);
 
 
         JToggleButton loginButton = createButton("Login", buttonGroup, () -> {
@@ -158,7 +157,7 @@ public class LoginView extends JFrame {
 
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController = PageNavigationController.getIstance(this);
         pageNavigationController.setEngine(engine);
 
         JToggleButton signInButton = createButton("Sign In", buttonGroup, pageNavigationController::navigateToRegister);

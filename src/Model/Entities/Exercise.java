@@ -4,7 +4,7 @@ public class Exercise {
     private int id;
     private final String name;
     private String intensity;
-    private int time;
+    private float time;
     private double calories;
     final double met;
 
@@ -18,7 +18,7 @@ public class Exercise {
         return intensity;
     }
 
-    public int getTime(){
+    public float getTime(){
         return time;
     }
 
@@ -26,7 +26,7 @@ public class Exercise {
         this.intensity = intensity;
     }
 
-    public void setTime(int time) {
+    public void setTime(float time) {
         this.time = time;
     }
 

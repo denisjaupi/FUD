@@ -1,7 +1,7 @@
 package View;
 
+import Controller.Engine;
 import Controller.PageNavigationController;
-import Controller.dbFoodManager;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -22,12 +22,15 @@ public class AddRecipeView extends JFrame {
     // Dichiaro i campi di testo come variabili di istanza
     private JTextField nameField;
     private JTextField descriptionField;
+    private Engine engine;
 
-    public AddRecipeView() {
+    public AddRecipeView(Engine e) {
         setupWindow();
+        this.engine=e;
         JPanel mainPanel = createMainPanel();
         add(mainPanel);
         setVisible(true);
+
     }
 
     ////////////////////////////////////////////////////////////////
@@ -116,7 +119,7 @@ public class AddRecipeView extends JFrame {
         constraints2.weightx = 0.15;  // Imposta la larghezza relativa della seconda colonna
         JComboBox<String> foodComboBox = new JComboBox<>();
         try {
-            ResultSet rs = dbFoodManager.getFood();
+            ResultSet rs = engine.getAll_food();
             while (rs.next()) {
                 String foodName = rs.getString("name");
                 foodComboBox.addItem(foodName);
@@ -280,7 +283,7 @@ public class AddRecipeView extends JFrame {
 
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController = PageNavigationController.getIstance(this);
 
         JToggleButton addFoodButton = createButton("Add Recipe", buttonGroup, () -> {
             String name = nameField.getText();
@@ -301,7 +304,7 @@ public class AddRecipeView extends JFrame {
 
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController =PageNavigationController.getIstance(this);
 
         JToggleButton backButton = createButton("Back", buttonGroup, pageNavigationController::navigateToRecipesTable);
 

@@ -7,10 +7,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DailyTracker extends JFrame {
-    Engine engine;
+    private Engine engine;
+
     public DailyTracker(Engine e) {
-        engine=e;
         setupWindow();
+        engine=e;
         JPanel mainPanel = createMainPanel();
         add(mainPanel);
         setVisible(true);
@@ -46,7 +47,7 @@ public class DailyTracker extends JFrame {
     private JPanel createButtonPanel() {
         JPanel buttonPanel = new JPanel(new GridLayout(4, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController = PageNavigationController.getIstance(this);
         pageNavigationController.setEngine(engine);
         JToggleButton button1 = createButton("Home", buttonGroup, pageNavigationController::navigateToHome);
         JToggleButton button2 = createButton("Profile", buttonGroup, pageNavigationController::navigateToProfile);

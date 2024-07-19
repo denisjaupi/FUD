@@ -68,6 +68,8 @@ public class Recipe {
     public String getDescription() {
         return description;
     }
+
+
     public void deleteIngredients(String name) {
         for (Food f : ingredients) {
             if (f.getName().equals(name)) {

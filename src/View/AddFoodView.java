@@ -2,7 +2,6 @@ package View;
 
 import Controller.Engine;
 import Controller.PageNavigationController;
-import Controller.dbFoodManager;
 import Model.Entities.Food;
 import Model.Entities.NutritionalInfo;
 
@@ -164,19 +163,17 @@ public class AddFoodView extends JFrame {
 
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController = PageNavigationController.getIstance(this);
         pageNavigationController.setEngine(engine);
         JToggleButton addFoodButton = createButton("Add", buttonGroup, () -> {
             String name = nameField.getText();
-            float calories = Float.parseFloat(caloriesField.getText());
-            float proteins = Float.parseFloat(proteinsField.getText());
-            float carbohydrates = Float.parseFloat(carbohydratesField.getText());
-            float fats = Float.parseFloat(fatsField.getText());
+            double calories = Double.parseDouble(caloriesField.getText());
+            double proteins = Double.parseDouble(proteinsField.getText());
+            double carbohydrates = Double.parseDouble(carbohydratesField.getText());
+            double fats = Double.parseDouble(fatsField.getText());
 
-            food = new Food(name, new NutritionalInfo(calories, proteins, carbohydrates, fats));
-
-            dbFoodManager.addFood_Db(food);
-            food.setId(dbFoodManager.selectId(name));
+            engine.addFood_db(name, calories, proteins, carbohydrates, fats);
+            food.setId(engine.selectId_food(name));
 
             // Dopo aver aggiunto il cibo, naviga alla pagina FoodsTable
             pageNavigationController.navigateToFoodTable();
@@ -191,7 +188,7 @@ public class AddFoodView extends JFrame {
 
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController = PageNavigationController.getIstance(this);
         pageNavigationController.setEngine(engine);
         JToggleButton backButton = createButton("Back", buttonGroup, pageNavigationController::navigateToFoodTable);
 

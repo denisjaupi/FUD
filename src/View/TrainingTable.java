@@ -2,7 +2,6 @@ package View;
 
 import Controller.Engine;
 import Controller.PageNavigationController;
-import Controller.dbExerciseManager;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -62,7 +61,7 @@ public class TrainingTable extends JFrame {
         header.setFont(new Font("Arial", Font.BOLD, 18));
 
         ///////////////////////////////////////////////////////
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController = PageNavigationController.getIstance(this);
         pageNavigationController.setEngine(engine);
 
         // Aggiungi un TableCellRenderer e un TableCellEditor alla colonna "Add"
@@ -119,7 +118,7 @@ public class TrainingTable extends JFrame {
         ///////////////////////////////////////////////////////
 
         // Riempire il modello con i dati dal database
-        ResultSet rs = dbExerciseManager.getExercise();
+        ResultSet rs = engine.getAll_exercise();
 
         try{
             while(rs.next()){
@@ -159,7 +158,7 @@ public class TrainingTable extends JFrame {
     private JPanel createBackButtonPanel() {
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController = PageNavigationController.getIstance(this);
         pageNavigationController.setEngine(engine);
 
         JToggleButton backButton = createButton("Back", buttonGroup, pageNavigationController::navigateToHome);

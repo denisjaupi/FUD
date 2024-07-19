@@ -1,8 +1,7 @@
 package View;
 
+import Controller.Engine;
 import Controller.PageNavigationController;
-import Controller.dbFoodManager;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -11,9 +10,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class FoodsTable extends JFrame{
-
-    public FoodsTable() {
+    private Engine engine;
+    public FoodsTable(Engine e) {
         setupWindow();
+        engine=e;
         JPanel mainPanel = createMainPanel();
         add(mainPanel);
         setVisible(true);
@@ -59,7 +59,7 @@ public class FoodsTable extends JFrame{
         header.setFont(new Font("Arial", Font.BOLD, 18));
 
         // Riempire il modello con i dati dal database
-        ResultSet rs = dbFoodManager.getFood();
+        ResultSet rs = engine.getAll_food();
 
         try{
             while(rs.next()){
@@ -143,7 +143,7 @@ public class FoodsTable extends JFrame{
 
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController =PageNavigationController.getIstance(this);
 
         JToggleButton backButton = createButton("Back", buttonGroup, pageNavigationController::navigateToHome);
         JToggleButton newFoodButton = createButton("New Food", buttonGroup, pageNavigationController::navigateToAddFood);

@@ -2,8 +2,6 @@ package View;
 
 import Controller.Engine;
 import Controller.PageNavigationController;
-import Controller.dbFoodManager;
-import Model.Entities.User;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -24,7 +22,6 @@ public class RegisterView extends JFrame {
     private JTextField passwordField;
     private JTextField validatePasswordField;
     private JTextField emailField;
-    private User user;
     private Engine registerEngine;
 
 
@@ -116,7 +113,7 @@ public class RegisterView extends JFrame {
 
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController = PageNavigationController.getIstance(this);
 
         JToggleButton addUserButton = createButton("Sign In", buttonGroup, () -> {
             // Aggiungi l'utente al database
@@ -125,7 +122,6 @@ public class RegisterView extends JFrame {
             String password = passwordField.getText();
             String validatePassword = validatePasswordField.getText();
 
-            user = new User(email, password, username);
 
             if (!password.equals(validatePassword)) {
                 JOptionPane.showMessageDialog(this, "Passwords do not match", "Error", JOptionPane.ERROR_MESSAGE);
@@ -137,7 +133,7 @@ public class RegisterView extends JFrame {
                 return;
             }
 
-            if (registerEngine.register(user)) {
+            if (registerEngine.register(email, password, username)){
                 JOptionPane.showMessageDialog(this, "User registered successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "User already exists", "Error", JOptionPane.ERROR_MESSAGE);
@@ -158,7 +154,7 @@ public class RegisterView extends JFrame {
 
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController =  PageNavigationController.getIstance(this);
 
         JToggleButton backButton = createButton("Back", buttonGroup, pageNavigationController::navigateToLogin);
 

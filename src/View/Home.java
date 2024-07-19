@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Home extends JFrame {
-    private Engine engine= new Engine();
+    private Engine engine;
 
 
     public Home(Engine e) {
@@ -53,7 +53,7 @@ public class Home extends JFrame {
     private JPanel createLogPanel() {
         JPanel logPanel = new JPanel(new GridLayout(1, 2));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController =  PageNavigationController.getIstance(this);
         pageNavigationController.setEngine(engine);
         logPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -75,7 +75,7 @@ public class Home extends JFrame {
     private JPanel createDbButtonsPanel() {
         JPanel dbButtonsPanel = new JPanel(new GridLayout(2, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController =  PageNavigationController.getIstance(this);
         pageNavigationController.setEngine(engine);
         dbButtonsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -255,7 +255,7 @@ public class Home extends JFrame {
     private JPanel createButtonPanel() {
         JPanel buttonPanel = new JPanel(new GridLayout(4, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController = PageNavigationController.getIstance(this);
         pageNavigationController.setEngine(engine);
         JToggleButton button1 = createButton("Home", buttonGroup, null);
         JToggleButton button2 = createButton("Profile", buttonGroup, pageNavigationController::navigateToProfile);

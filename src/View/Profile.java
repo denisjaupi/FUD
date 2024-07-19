@@ -14,7 +14,6 @@ import java.text.DecimalFormat;
 
 import Controller.Engine;
 import Controller.PageNavigationController;
-import Controller.dbUserManager;
 import Model.Entities.User;
 import Model.Util.CalculatedProfileData;
 import Model.Entities.PersonalData;
@@ -35,8 +34,8 @@ public class Profile extends JFrame {
     private JTextField waterRequirementField;
     private JTextField caloricIntakeField;
 
-    private Engine engine = new Engine();
-    private User currentUser = new User();
+    private Engine engine;
+    private User currentUser;
 
     public Profile(Engine engine) {
         this.engine = engine;
@@ -90,7 +89,7 @@ public class Profile extends JFrame {
     private JPanel createButtonPanel() {
         JPanel buttonPanel = new JPanel(new GridLayout(4, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController =PageNavigationController.getIstance(this);
         pageNavigationController.setEngine(engine);
         JToggleButton button1 = createButton("Home", buttonGroup, pageNavigationController::navigateToHome);
         JToggleButton button2 = createButton("Profile", buttonGroup, pageNavigationController::navigateToProfile);
@@ -122,7 +121,7 @@ public class Profile extends JFrame {
 
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController =PageNavigationController.getIstance(this);
         pageNavigationController.setEngine(engine);
 
         JToggleButton logoutButton = createButton("Logout", buttonGroup, () -> {
@@ -139,7 +138,7 @@ public class Profile extends JFrame {
             int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete your account?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (response == JOptionPane.YES_OPTION) {
                 try {
-                    dbUserManager.deleteUser(dbUserManager.getUser().getId());
+                    engine.deleteUser(engine.getUser().getId());
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
@@ -227,8 +226,8 @@ public class Profile extends JFrame {
                 activityLevelComboBox.getSelectedItem() != null && goalComboBox.getSelectedItem() != null) {
 
             // Ottieni i valori dai campi di input
-            double height = Double.parseDouble(heightField.getText());
-            double weight = Double.parseDouble(weightField.getText());
+            float  height = Float.parseFloat(heightField.getText());
+            float weight = Float.parseFloat(weightField.getText());
             int age = (int) ageComboBox.getSelectedItem();
             String gender = genderComboBox.getSelectedItem().toString();
             String activityLevel = activityLevelComboBox.getSelectedItem().toString();
@@ -401,20 +400,21 @@ public class Profile extends JFrame {
         JButton saveButton = new JButton("Save");
         saveButton.addActionListener(e -> {
             // Recupera i valori dai campi di input
-            double height = Double.parseDouble(heightField.getText());
-            double weight = Double.parseDouble(weightField.getText());
+            float height =Float.parseFloat(heightField.getText());
+            float weight = Float.parseFloat(weightField.getText());
             int age = (int) ageComboBox.getSelectedItem();
             String gender = genderComboBox.getSelectedItem().toString();
             String activityLevel = activityLevelComboBox.getSelectedItem().toString();
             String goal = goalComboBox.getSelectedItem().toString();
             int mealCount = Integer.parseInt(mealCountField.getText());
 
-            // Crea un nuovo oggetto PersonalData con i valori recuperati
-            PersonalData personalData = new PersonalData(height, weight, age, gender, activityLevel, goal);
-            personalData.setMealCount(mealCount);
 
             // Salva l'oggetto PersonalData
-            engine.addPersonalData(personalData);
+            try {
+                engine.addPersonalData(height, weight, age, gender, activityLevel, goal, mealCount);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         });
         saveButtonPanel.add(saveButton);
         selectionPanel.add(saveButtonPanel, BorderLayout.SOUTH);

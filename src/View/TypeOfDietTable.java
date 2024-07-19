@@ -1,9 +1,7 @@
 package View;
 
+import Controller.Engine;
 import Controller.PageNavigationController;
-import Controller.dbExerciseManager;
-import Controller.dbFoodManager;
-
 import javax.swing.*;
 import javax.swing.table.*;
 import javax.swing.text.*;
@@ -14,15 +12,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class TypeOfDietTable extends JFrame {
-
+    private Engine engine;
     // Dichiaro i campi di testo come variabili di istanza
     private JTextField usernameField;
     private JTextField passwordField;
     private JTextField validatePasswordField;
 
 
-    public TypeOfDietTable() {
+    public TypeOfDietTable(Engine e) {
         setupWindow();
+        this.engine=e;
         JPanel mainPanel = createMainPanel();
         add(mainPanel);
         setVisible(true);
@@ -70,7 +69,7 @@ public class TypeOfDietTable extends JFrame {
         header.setFont(new Font("Arial", Font.BOLD, 18));
 
         ///////////////////////////////////////////////////////
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController = PageNavigationController.getIstance(this);
 
         // Aggiungi un TableCellRenderer e un TableCellEditor alla colonna "Add"
         TableColumn addColumn = table.getColumn("Add");
@@ -119,7 +118,7 @@ public class TypeOfDietTable extends JFrame {
         ///////////////////////////////////////////////////////
 
         // Riempire il modello con i dati dal database
-        ResultSet rs = dbExerciseManager.getExercise();
+        ResultSet rs =engine.getAll_exercise();
 
         try{
             while(rs.next()){
@@ -161,7 +160,7 @@ public class TypeOfDietTable extends JFrame {
 
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController = PageNavigationController.getIstance(this);
 
         JToggleButton addFoodButton = createButton("Save", buttonGroup, () -> {
             // Salva il tipo di dieta
@@ -179,7 +178,7 @@ public class TypeOfDietTable extends JFrame {
 
         JPanel buttonPanel = new JPanel(new GridLayout(11, 1));
         ButtonGroup buttonGroup = new ButtonGroup();
-        PageNavigationController pageNavigationController = new PageNavigationController(this);
+        PageNavigationController pageNavigationController =PageNavigationController.getIstance(this);
 
         JToggleButton backButton = createButton("Back", buttonGroup, pageNavigationController::navigateToDailyPlan);
 
